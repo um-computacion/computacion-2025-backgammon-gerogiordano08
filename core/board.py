@@ -1,66 +1,53 @@
 class Board:
     def __init__(self):
-        self.__filas__ = [[' ', ' ', ' ', ' ', ' ', ' ' ], [' ', ' ', ' ', ' ', ' ', ' ' ],
-                           [' ', ' ', ' ', ' ', ' ', ' ' ], [' ', ' ', ' ', ' ', ' ', ' ' ], 
-                           [' ', ' ', ' ', ' ', ' ', ' ' ], [' ', ' ', ' ', ' ', ' ', ' ' ], 
-                           [' ', ' ', ' ', ' ', ' ', ' ' ], [' ', ' ', ' ', ' ', ' ', ' ' ], 
-                           [' ', ' ', ' ', ' ', ' ', ' ' ], [' ', ' ', ' ', ' ', ' ', ' ' ], 
-                           [' ', ' ', ' ', ' ', ' ', ' ' ], [' ', ' ', ' ', ' ', ' ', ' ' ], 
-                           [' ', ' ', ' ', ' ', ' ', ' ' ], [' ', ' ', ' ', ' ', ' ', ' ' ], 
-                           [' ', ' ', ' ', ' ', ' ', ' ' ], [' ', ' ', ' ', ' ', ' ', ' ' ], 
-                           [' ', ' ', ' ', ' ', ' ', ' ' ], [' ', ' ', ' ', ' ', ' ', ' ' ], 
-                           [' ', ' ', ' ', ' ', ' ', ' ' ], [' ', ' ', ' ', ' ', ' ', ' ' ]]
 
+        self.__columnas__ = [{'checker' : 'x', 'quantity' : 9}, {'checker' : 'x', 'quantity' : 3}, {'checker' : 'x', 'quantity' : 5}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
+                             {'checker' : 'o', 'quantity' : 3}, {'checker' : 'o', 'quantity' : 4}, {'checker' : 'o', 'quantity' : 4}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}]
         self.__barra__ = ()
     def show_board(self):
-        print(f""" 
-                           TABLERO DE BACKGAMMONSs
-           24  23  22  21  20  19   |BAR|   18  17  16  15  14  13
-         +---+---+---+---+---+---+  |   |  +---+---+---+---+---+---+
-Fila 1   | {' | '.join(self.__filas__[0])} |  |   |  | {' | '.join(self.__filas__[1])} |
-Fila 2   | {' | '.join(self.__filas__[2])} |  |   |  | {' | '.join(self.__filas__[3])} |
-Fila 3   | {' | '.join(self.__filas__[4])} |  |   |  | {' | '.join(self.__filas__[5])} |
-Fila 4   | {' | '.join(self.__filas__[6])} |  |   |  | {' | '.join(self.__filas__[7])} |
-Fila 5   | {' | '.join(self.__filas__[8])} |  |   |  | {' | '.join(self.__filas__[9])} |
-Fila 6   | v | v | v | v | v | v |  |   |  | v | v | v | v | v | v |
-         +---+---+---+---+---+---+  |   |  +---+---+---+---+---+---+
-         +---+---+---+---+---+---+  |   |  +---+---+---+---+---+---+
-Fila 6   | ^ | ^ | ^ | ^ | ^ | ^ |  |   |  | ^ | ^ | ^ | ^ | ^ | ^ |
-Fila 5   | {' | '.join(self.__filas__[10])} |  |   |  | {' | '.join(self.__filas__[11])} |
-Fila 4   | {' | '.join(self.__filas__[12])} |  |   |  | {' | '.join(self.__filas__[13])} |
-Fila 3   | {' | '.join(self.__filas__[14])} |  |   |  | {' | '.join(self.__filas__[15])} |
-Fila 2   | {' | '.join(self.__filas__[16])} |  |   |  | {' | '.join(self.__filas__[17])} |
-Fila 1   | {' | '.join(self.__filas__[18])} |  |   |  | {' | '.join(self.__filas__[19])} |
-         +---+---+---+---+---+---+  |   |  +---+---+---+---+---+---+
-           1   2   3   4   5   6    |BAR|    7   8   9  10  11  12
-Leyenda:
-- La columna central es la **BAR** (barra).
-- Si un punto tiene más de 6 fichas, usa (7), (8), etc.
-""")
-    def put_checker(self, row, column):
-        if column >= 13:
-            if column <= 18:
-                y = 5 - (column - 13)
-                x = 1 + 2*(row-1)
-            else:
-                y = 5 - (column - 19)
-                x = 0 + 2 * (row-1)
-        else:
-            if column <= 6:
-                y = column - 1
-                x = 20 - row * 2
-            else:
-                y = column - 7
-                x = 19 - 2 * (row-1)
-                
-             
+        
+        c = self.checker
 
-                    
-        self.__filas__[x][y] = 'x'
-#tab = Board()
-#tab.put_checker(4, 10)
-#tab.put_checker(3, 17)
-#tab.put_checker(2, 21)
-#tab.put_checker(1, 5)
-#tab.show_board()
+        print("                          TABLERO DE BACKGAMMON")
+        print("           24  23  22  21  20  19   |BAR|   18  17  16  15  14  13")
+        print("         +---+---+---+---+---+---+  |   |  +---+---+---+---+---+---+")
+        for y in range(1, 6):
+            left = ' | '.join([f"{c(x,y)}" for x in range(23, 17, -1)])
+            right = ' | '.join([f"{c(x,y)}" for x in range(17, 11, -1)])
+            print(f"Fila {y}   | {left} |  |   |  | {right} |")
+        print("Fila 6   | v | v | v | v | v | v |  |   |  | v | v | v | v | v | v |")
+        print("         +---+---+---+---+---+---+  |   |  +---+---+---+---+---+---+")
+        print("         +---+---+---+---+---+---+  |   |  +---+---+---+---+---+---+")
+        print("Fila 6   | ^ | ^ | ^ | ^ | ^ | ^ |  |   |  | ^ | ^ | ^ | ^ | ^ | ^ |")
+        for y in range(5, 0, -1):
+            left = ' | '.join([f"{c(x,y)}" for x in range(0, 6)])
+            right = ' | '.join([f"{c(x,y)}" for x in range(6, 12)])
+            print(f"Fila {y}   | {left} |  |   |  | {right} |")
+        print("         +---+---+---+---+---+---+  |   |  +---+---+---+---+---+---+")
+        print("           1   2   3   4   5   6    |BAR|    7   8   9  10  11  12")
+        print("""
+- La columna central es la **BAR** (barra).
+- Si un punto tiene más de 5 fichas, usa (6), (7), etc."
+              """)
+
+    def checker(self, column, level):
+        q = self.__columnas__[column]['quantity']
+        if  q == 0:
+            return ' '
+        elif q > 5 and level == 5:
+            return q
+        elif q >= level:
+            return self.__columnas__[column]["checker"]
+        else:
+            return ' '
+        
+    def add_checker(self, column):
+        self.__columnas__[column - 1]['quantity'] += 1
+    def remove_checker(self, column):
+        self.__columnas__[column - 1]['quantity'] -= 1
+    def put_checker(self, column, checker):
+        self.__columnas__[column - 1]['checker'] = checker
+        self.__columnas__[column - 1]['quantity'] += 1
+# tab = Board()
+# tab.show_board()
 
