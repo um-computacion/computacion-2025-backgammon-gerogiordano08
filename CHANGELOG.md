@@ -2,6 +2,12 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog. 
 
+## [29/08/2025]
+
+### Agregado
+- En la clase 'Board'
+    - Se configuraron los tests para todos los métodos de la clase. 
+    - Se documentaron todos los docstrings de todos los tests y todos los métodos de la clase. 
 ## [28/08/2025]
 
 ### Agregado

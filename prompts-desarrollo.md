@@ -1,7 +1,7 @@
 PROMPTS USADOS EN EL DESARROLLO
 - ChatGPT 5:
         -Input: "me podrías proporcionar el dibujo de una tabla de backgammon hecha con caracteres de teclado, que pueda imprimir en una consola?"
-                -Output: 
+        -Output: 
                 " ¡claro! aquí tienes un tablero de backgammon en ASCII puro (solo caracteres de teclado), listo para pegar en una consola e imprimir. Está vacío para que coloques tus fichas con X y O. Incluye 24 puntos numerados, la barra al centro y espacio para apilar hasta 6 fichas por punto (si hay más, puedes escribir un número entre paréntesis en la fila superior o inferior).
                                         TABLERO DE BACKGAMMON (vacío)
                         24  23  22  21  20  19   |BAR|   18  17  16  15  14  13
@@ -66,4 +66,4 @@ PROMPTS USADOS EN EL DESARROLLO
             print(f"Fila {y}   | {left} |  |   |  | {right} |")
         print(" +---+---+---+---+---+---+  |   |  +---+---+---+---+---+---+")
         print("   1   2   3   4   5   6    |BAR|    7   8   9  10  11  12")
-        - Uso: Le pedi al asistente integrado de github en VS Code que ingrese las coordenadas de cada lugar del tablero al tablero que tenia diseñado para imprimir. Decidio hacer otro método para esto. Saque de ese método la logica y la implementé en el método que ya existía. 
+        - Uso: Le pedi al asistente integrado de github en VS Code que ingrese las coordenadas de cada lugar del tablero al tablero que tenia diseñado para imprimir. Decidio hacer otro método para esto. Saque de ese método la logica y la implementé en el método que ya existía. Fue utilizado en core/board.py. 
