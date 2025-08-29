@@ -5,7 +5,7 @@ class Board:
                              {'checker' : 'o', 'quantity' : 3}, {'checker' : 'o', 'quantity' : 4}, {'checker' : 'o', 'quantity' : 4}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}]
         self.__barra__ = ()
     def show_board(self):
-        
+        """ Este método imprime el tablero, poniendo el método checker(column, level) con las respectivas coordenadas en cada espacio ocupable por fichas del tablero."""
         c = self.checker
 
         print("                          TABLERO DE BACKGAMMON")
@@ -25,12 +25,11 @@ class Board:
             print(f"Fila {y}   | {left} |  |   |  | {right} |")
         print("         +---+---+---+---+---+---+  |   |  +---+---+---+---+---+---+")
         print("           1   2   3   4   5   6    |BAR|    7   8   9  10  11  12")
-        print("""
-- La columna central es la **BAR** (barra).
-- Si un punto tiene más de 5 fichas, usa (6), (7), etc."
-              """)
-
+        print("- La columna central es la **BAR** (barra).")
+        print("- Si un punto tiene más de 5 fichas, usa (6), (7), etc.")
+    
     def checker(self, column, level):
+        """ Este método devuelve la ficha correspondiente (o ninguna) dependiendo de las coordenadas del tablero y la ocupacion, que analiza en el atributo __columnas__. """
         q = self.__columnas__[column]['quantity']
         if  q == 0:
             return ' '
@@ -42,12 +41,20 @@ class Board:
             return ' '
         
     def add_checker(self, column):
+        """ Este método aumenta por una unidad la cantidad de fichas que se encuentran en una columna del tablero, accediendo al atributo __columnas__. Debe haberse configurado la ficha previamente para que su uso tenga sentido. """
         self.__columnas__[column - 1]['quantity'] += 1
+    
     def remove_checker(self, column):
+        """ Este método reduce por una unidad la cantidad de fichas que se encuentran en una columna del tablero, accediendo al atributo __columnas__. Debe haberse configurado la ficha previamente y la cantidad debe ser mayor que 0 para que su uso tenga sentido. """
         self.__columnas__[column - 1]['quantity'] -= 1
+    
     def put_checker(self, column, checker):
+        """ Este método configura una ficha especifica en una columna, determinando que ficha es y la cantidad a 1. """
         self.__columnas__[column - 1]['checker'] = checker
-        self.__columnas__[column - 1]['quantity'] += 1
-# tab = Board()
-# tab.show_board()
+        self.__columnas__[column - 1]['quantity'] = 1
+   
+    def get_columnas(self):
+        """ Este método devuelve el atributo __columnas__ para su uso externamente. """
+        return self.__columnas__
+
 
