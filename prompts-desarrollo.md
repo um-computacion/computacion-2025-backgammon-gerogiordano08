@@ -67,3 +67,4 @@ PROMPTS USADOS EN EL DESARROLLO
         print(" +---+---+---+---+---+---+  |   |  +---+---+---+---+---+---+")
         print("   1   2   3   4   5   6    |BAR|    7   8   9  10  11  12")
         - Uso: Le pedi al asistente integrado de github en VS Code que ingrese las coordenadas de cada lugar del tablero al tablero que tenia diseñado para imprimir. Decidio hacer otro método para esto. Saque de ese método la logica y la implementé en el método que ya existía. Fue utilizado en core/board.py. 
+        
