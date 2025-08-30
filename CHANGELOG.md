@@ -2,7 +2,19 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog. 
 
-## [30/08/2025]
+## [30/08/2025] commit 2
+
+### Agregado
+- Fue creada la clase 'Dice':
+    - Atributos:
+        - __die_1__, corresponde al valor del primer dado. 
+        - __die_2__, corresponde al valor del segundo dado. 
+    - Métodos:
+        - roll_dice() le da un valor al azar entre 1 y 6 a cada uno de los dados. 
+        - clear_dice() le da el valor 0 a ambos dados. 
+    - Se configuraron los tests para todos los métodos de la clase. 
+
+## [30/08/2025]commit 1
 
 ### Agregado
 - Fue creada la clase 'Checker'
