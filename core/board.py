@@ -28,7 +28,7 @@ class Board:
         print("- La columna central es la **BAR** (barra).")
         print("- Si un punto tiene más de 5 fichas, usa (6), (7), etc.")
     
-    def checker(self, column, level):
+    def checker(self, column:int, level:int):
         """ Este método devuelve la ficha correspondiente (o ninguna) dependiendo de las coordenadas del tablero y la ocupacion, que analiza en el atributo __columnas__. """
         q = self.__columnas__[column]['quantity']
         if  q == 0:
@@ -40,15 +40,15 @@ class Board:
         else:
             return ' '
         
-    def add_checker(self, column):
+    def add_checker(self, column:int):
         """ Este método aumenta por una unidad la cantidad de fichas que se encuentran en una columna del tablero, accediendo al atributo __columnas__. Debe haberse configurado la ficha previamente para que su uso tenga sentido. """
         self.__columnas__[column - 1]['quantity'] += 1
     
-    def remove_checker(self, column):
+    def remove_checker(self, column:int):
         """ Este método reduce por una unidad la cantidad de fichas que se encuentran en una columna del tablero, accediendo al atributo __columnas__. Debe haberse configurado la ficha previamente y la cantidad debe ser mayor que 0 para que su uso tenga sentido. """
         self.__columnas__[column - 1]['quantity'] -= 1
     
-    def put_checker(self, column, checker):
+    def put_checker(self, column:int, checker:str):
         """ Este método configura una ficha especifica en una columna, determinando que ficha es y la cantidad a 1. """
         self.__columnas__[column - 1]['checker'] = checker
         self.__columnas__[column - 1]['quantity'] = 1

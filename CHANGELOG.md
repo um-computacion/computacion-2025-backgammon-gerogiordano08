@@ -1,7 +1,13 @@
 # Changelog
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog. 
+## [30/08/2025] commit 3
 
+### Agregado
+- Fue creada la clase 'Player'
+    - Atributos:
+        - __name__, corresponde al nombre que el jugador quiera usar. 
+        - __checker_type__, corresponde al tipo de ficha que le toca a ese jugador (1, 2)
 ## [30/08/2025] commit 2
 
 ### Agregado
