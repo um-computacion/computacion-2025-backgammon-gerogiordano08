@@ -2,12 +2,25 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog. 
 
+## [30/08/2025]
+
+### Agregado
+- Fue creada la clase 'Checker'
+    - Atributos:
+        - __type__, que ingresa como argumento de la clase necesario para inicializarse. Diferencia si es una ficha 'x' o una ficha 'o'. 
+        - __symbol_1__, es el simbolo 'x' correspondiente al tipo 1. 
+        - __symbol_2__, es el simbolo 'o' correspondiente al tipo 2. 
+    - Métodos:
+        - get_symbol() devuelve el simbolo correspondiente al tipo de ficha ('x', 'o'). 
+    - Se configuraron los tests para todos los métodos de la clase. 
+
 ## [29/08/2025]
 
 ### Agregado
 - En la clase 'Board'
     - Se configuraron los tests para todos los métodos de la clase. 
     - Se documentaron todos los docstrings de todos los tests y todos los métodos de la clase. 
+
 ## [28/08/2025]
 
 ### Agregado
@@ -20,6 +33,7 @@ Todos los cambios notables del proyecto van a ser documentados en este changelog
     - Se reemplazo el atributo __filas__ por __columnas__ para asi tener un acercamiento mas ordenado, no solo para el tablero ASCII sino tambien para la futura implementacion de graficos Pygame
     - El método show_board() ahora usa loops para insertar dentro del tablero la nueva funcion checker(x, y) que imprime la ficha adecuada de acuerdo con la lista de columnas. 
     - El método put_checker(row, column, checker) fue reemplazado por put_checker(column, checker) que ahora agrega a una columna una nueva ficha en una sola unidad. Debe ser usado solo para columnas en las que anteriormente no habia ninguna ficha. 
+
 ## [26/08/2025]
 
 ### Agregado
