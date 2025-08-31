@@ -40,19 +40,23 @@ class Board:
         else:
             return ' '
         
-    def add_checker(self, column:int):
-        """ Este método aumenta por una unidad la cantidad de fichas que se encuentran en una columna del tablero, accediendo al atributo __columnas__. Debe haberse configurado la ficha previamente para que su uso tenga sentido. """
-        self.__columnas__[column - 1]['quantity'] += 1
+    def add_checker(self, column:int, quan = 1):
+        """ Este método aumenta por 'quan' unidades (1 por defecto) la cantidad de fichas que se encuentran en una columna del tablero, accediendo al atributo __columnas__. Debe haberse configurado la ficha previamente para que su uso tenga sentido. """
+        self.__columnas__[column - 1]['quantity'] += quan
     
-    def remove_checker(self, column:int):
-        """ Este método reduce por una unidad la cantidad de fichas que se encuentran en una columna del tablero, accediendo al atributo __columnas__. Debe haberse configurado la ficha previamente y la cantidad debe ser mayor que 0 para que su uso tenga sentido. """
-        self.__columnas__[column - 1]['quantity'] -= 1
+    def remove_checker(self, column:int, quan = 1):
+        """ Este método reduce por 'quan' unidades (1 por defecto) la cantidad de fichas que se encuentran en una columna del tablero, accediendo al atributo __columnas__. Debe haberse configurado la ficha previamente y la cantidad debe ser mayor que 0 para que su uso tenga sentido. """
+        self.__columnas__[column - 1]['quantity'] -= quan
     
-    def put_checker(self, column:int, checker:str):
-        """ Este método configura una ficha especifica en una columna, determinando que ficha es y la cantidad a 1. """
+    def put_checker(self, column:int, checker:str, quan = 1):
+        """ Este método configura una ficha especifica en una columna, determinando que ficha es y la cantidad a 'quan' unidades (1 por defecto). """
         self.__columnas__[column - 1]['checker'] = checker
-        self.__columnas__[column - 1]['quantity'] = 1
-   
+        self.__columnas__[column - 1]['quantity'] = quan
+    def clear_board(self):
+        """ Este método limpia el tablero dejando la ficha ' ' con cantidad = 0 en todas las columnas. """
+        for x in range(0,24):
+            self.put_checker(x + 1, ' ')
+            self.__columnas__[x]['quantity'] = 0
     def get_columnas(self):
         """ Este método devuelve el atributo __columnas__ para su uso externamente. """
         return self.__columnas__

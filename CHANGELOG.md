@@ -1,6 +1,25 @@
 # Changelog
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog. 
+
+## [31/08/2025] commit 1
+
+### Agregado
+- Fue creada la clase 'Game'
+    - Atributos:
+        - __board__, es un objeto de clase 'Board'. 
+        - __dice__, es un objeto de clase 'Dice'. 
+        - __checker_1__, es un objeto de clase 'Checker'. 
+        - __checker_2__, es un objeto de clase 'Checker'. 
+        - __player_1__, es un objeto de clase 'Player'. 
+        - __player_2__, es un objeto de clase 'Player'. 
+    - Métodos:
+        - prepare_board(), deja las 30 fichas en sus lugares correspondientes para iniciar el juego. 
+    - Tests para prepare_board()
+- Método clear_board() que limpia los objetos Board, dejando 0 fichas en cada columna. Tests para este método. 
+
+### Alterado
+- Los métodos add_checker(column, quan), remove_checker(column, quan) y put_checker(column, quan) ahora aceptan el argumento quan para determinar el numero de fichas a agregar o restar, con un valor por defecto de 1. 
 ## [30/08/2025] commit 3
 
 ### Agregado
@@ -20,7 +39,7 @@ Todos los cambios notables del proyecto van a ser documentados en este changelog
         - clear_dice() le da el valor 0 a ambos dados. 
     - Se configuraron los tests para todos los métodos de la clase. 
 
-## [30/08/2025]commit 1
+## [30/08/2025] commit 1
 
 ### Agregado
 - Fue creada la clase 'Checker'

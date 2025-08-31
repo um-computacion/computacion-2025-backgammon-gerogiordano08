@@ -69,5 +69,19 @@ class BoardTests(unittest.TestCase):
         self.assertEqual(tab.get_columnas()[6]['checker'], 'o')
         self.assertEqual(tab.get_columnas()[21]['checker'], 'y')
         self.assertEqual(tab.get_columnas()[10]['checker'], ' ')
+    def test_clear_board(self):
+        """ Este test verifica que al usar clear_board() el tablero queda limpio. """
+        tab = Board()
+        self.assertFalse(
+        all(
+        column['quantity'] == 0
+        for column in tab.get_columnas()
+        ))
+        tab.clear_board()
+        self.assertTrue(
+        all(
+        column['quantity'] == 0
+        for column in tab.get_columnas()
+        ))
 if __name__ == '__main__':
     unittest.main()

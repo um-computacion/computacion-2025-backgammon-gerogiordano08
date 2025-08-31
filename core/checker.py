@@ -8,4 +8,6 @@ class Checker:
             return self.__symbol_1__
         elif self.__type__ == 2:
             return self.__symbol_2__
+        else: 
+            return ' '
         
