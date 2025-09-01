@@ -2,6 +2,16 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog. 
 
+## [31/08/2025] commit 3
+
+### Agregado
+- En la clase 'Game'
+    - Fueron creados los métodos:
+        - can_finish_checkers_p1() y can_finish_checkers_p2() que verifican si cada jugador puede empezar a sacas sus fichas del tablero. 
+        - win_condition(player) que verifica si el jugador indicado en el argumento (1 o 2) ha ganado. 
+    - Tests para estos metodos
+### Alterado
+Se modifico la orientacion de las columnas del tablero, que seguia una numeracion antihoraria, cuando en realidad debe ser horaria. Se adaptaron todos los metodos y tests que se habian creado teniendo en cuenta la orientacion antihoraria. 
 ## [31/08/2025] commit 2
 
 ### Agregado
