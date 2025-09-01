@@ -2,6 +2,15 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog. 
 
+## [31/08/2025] commit 2
+
+### Agregado
+- En la clase 'Game'
+    - Fueron creados los métodos:
+        - move_checker(fro, to), que de acuerdo a los argumentos, mueve una ficha de una columna a otra. No toma en cuenta las condiciones necesarias para hacer un movimiento valido. 
+        - roll_dice(), toma el método roll_dice() de la clase 'Dice' para conseguir dos numeros aleatorios entre 1 y 6. 
+        - available_move(fro, to) verifica que se cumplan las condiciones necesarias para que un movimiento de ficha sea valido de acorde a las reglas del juego. 
+    - Tests para estos métodos. 
 ## [31/08/2025] commit 1
 
 ### Agregado
