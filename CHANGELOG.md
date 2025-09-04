@@ -2,6 +2,21 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog. 
 
+## [31/08/2025] 
+
+### Agregado
+- En la clase 'Game'
+    - Fue creado el método check_bar(player) que verifica si hay alguna ficha en la barra de algun jugador. 
+    - Ademas los métodos de la clase Board tambien fueron agregados a la clase Game para seguir los principios de encapsulacion. 
+    - Fueron documentadas los métodos con docstrings
+    - Fueron agregados 'getters'
+    - Fueron agregados tests. 
+
+### Alterado
+- En la clase Board
+    - Se elimino el atributo __barra__, ahora las fichas de la barra se encuentran en las columnas [24] y [25] de el atributo __columnas__ para implementar de manera mas practica las funciones que tengan que ver con la barra. 
+
+
 ## [31/08/2025] commit 3
 
 ### Agregado

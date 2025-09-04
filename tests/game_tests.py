@@ -79,10 +79,22 @@ class GameTests(unittest.TestCase):
     def test_win_condition(self):
         """ Este test verifica que el método win_condition() devuelve True solo cuando se cumple la condicion de victoria para el jugador señalado. """
         g, c, q, col = self.setUp()
-        self.assertFalse(g.win_condition(1))
-        self.assertFalse(g.win_condition(2))
+        self.assertFalse(g.win_condition(g.get_player_1()))
+        self.assertFalse(g.win_condition(g.get_player_2()))
         for x in range(0, 24):
             col[x][q] = 0
-        self.assertTrue(g.win_condition(1))
-        self.assertTrue(g.win_condition(2))
+        self.assertTrue(g.win_condition(g.get_player_1()))
+        self.assertTrue(g.win_condition(g.get_player_2()))
+    def test_check_bar(self):
+        """ El test verifica que check_bar(player) devuelve True o False correctamente de acuerdo al caso. """
+        g, c, q, col = self.setUp()
+        self.assertFalse(g.check_bar(g.get_player_1()))
+        self.assertFalse(g.check_bar(g.get_player_2()))
+        g.add_checker(24)
+        self.assertTrue(g.check_bar(g.get_player_1()))
+        self.assertFalse(g.check_bar(g.get_player_2()))
+        g.add_checker(25)
+        self.assertTrue(g.check_bar(g.get_player_1()))
+        self.assertTrue(g.check_bar(g.get_player_2()))
         
+
