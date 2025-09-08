@@ -13,7 +13,7 @@ class BoardTests(unittest.TestCase):
         tab = self.setUp()
         tab.show_board()
         esperadas = [call("                          TABLERO DE BACKGAMMON"),
-                    call("           24  23  22  21  20  19   |BAR|   18  17  16  15  14  13"), 
+                    call("           13  14  15  16  17  18   |BAR|   19  20  21  22  23  24"), 
                     call("         +---+---+---+---+---+---+  |   |  +---+---+---+---+---+---+"), 
                     call("Fila 1   |   |   |   |   |   |   |  |   |  |   |   |   |   |   |   |"),
                     call("Fila 2   |   |   |   |   |   |   |  |   |  |   |   |   |   |   |   |"),
@@ -29,7 +29,7 @@ class BoardTests(unittest.TestCase):
                     call("Fila 2   |   |   |   |   |   |   |  |   |  |   |   |   |   |   |   |"),
                     call("Fila 1   |   |   |   |   |   |   |  |   |  |   |   |   |   |   |   |"),
                     call("         +---+---+---+---+---+---+  |   |  +---+---+---+---+---+---+"),
-                    call("           1   2   3   4   5   6    |BAR|    7   8   9  10  11  12"),
+                    call("          12  11  10   9   8   7    |BAR|    6   5   4   3   2   1"),
                     call("- La columna central es la **BAR** (barra)."),
                     call("- Si un punto tiene más de 5 fichas, usa (6), (7), etc.")
                     ]
@@ -38,8 +38,8 @@ class BoardTests(unittest.TestCase):
     def test_checker(self):
         """ Este test prepara el tablero, agrega la ficha x a la columna 5, suma una ficha en esa columna y luego verifica que el método checker(column, level) devuelve correctamente la ficha x en los niveles 1 y 2 y devuelve ' ' en el nivel 3 """
         tab = self.setUp()
-        tab.put_checker(5, 'x')
-        tab.add_checker(5)
+        tab.put_checker(4, 'x')
+        tab.add_checker(4)
         self.assertEqual(tab.checker(4, 1), 'x')
         self.assertEqual(tab.checker(4, 2), 'x')
         self.assertEqual(tab.checker(4, 3), ' ')
@@ -48,26 +48,40 @@ class BoardTests(unittest.TestCase):
              le suma una ficha a la cantidad con el método add_checker(column) 
              y verifica que la cantidad de fichas en la columna 5 sea igual a 2"""
         tab = self.setUp()
-        tab.put_checker(5, 'x')
-        tab.add_checker(5)
+        tab.put_checker(4, 'x')
+        tab.add_checker(4)
         self.assertEqual(tab.get_columnas()[4]['quantity'], 2)
     def test_remove_checker(self):
         """Este test prepara el tablero, agrega la ficha x en la columna 5, le suma una ficha a la cantidad con el método add_checker(column), le resta una ficha con remove_checker(column) y verifica que la cantidad de fichas en la columna 5 sea igual a 1"""
         
         tab = self.setUp()
-        tab.put_checker(5, 'x')
-        tab.add_checker(5)
-        tab.remove_checker(5)
+        tab.put_checker(4, 'x')
+        tab.add_checker(4)
+        tab.remove_checker(4)
         self.assertEqual(tab.get_columnas()[4]['quantity'], 1)
     def test_put_checker(self):
         """ Este test prepara el tablero, agrega distintas fichas en tres columnas distintas del tablero con put_checker(column, checker) y luego verifica que en __columnas__, en dichas columnas especificas se encuentren esas fichas, y que en una columna no elegida la ficha sea ' '."""
         tab = self.setUp()
-        tab.put_checker(5, 'x')
-        tab.put_checker(7, 'o')
-        tab.put_checker(22, 'y')
+        tab.put_checker(4, 'x')
+        tab.put_checker(6, 'o')
+        tab.put_checker(21, 'y')
         self.assertEqual(tab.get_columnas()[4]['checker'], 'x')
         self.assertEqual(tab.get_columnas()[6]['checker'], 'o')
         self.assertEqual(tab.get_columnas()[21]['checker'], 'y')
         self.assertEqual(tab.get_columnas()[10]['checker'], ' ')
+    def test_clear_board(self):
+        """ Este test verifica que al usar clear_board() el tablero queda limpio. """
+        tab = Board()
+        self.assertFalse(
+        all(
+        column['quantity'] == 0
+        for column in tab.get_columnas()
+        ))
+        tab.clear_board()
+        self.assertTrue(
+        all(
+        column['quantity'] == 0
+        for column in tab.get_columnas()
+        ))
 if __name__ == '__main__':
     unittest.main()

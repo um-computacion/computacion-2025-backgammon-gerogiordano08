@@ -1,6 +1,59 @@
 # Changelog
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog. 
+
+## [31/08/2025] 
+
+### Agregado
+- En la clase 'Game'
+    - Fue creado el método check_bar(player) que verifica si hay alguna ficha en la barra de algun jugador. 
+    - Ademas los métodos de la clase Board tambien fueron agregados a la clase Game para seguir los principios de encapsulacion. 
+    - Fueron documentadas los métodos con docstrings
+    - Fueron agregados 'getters'
+    - Fueron agregados tests. 
+
+### Alterado
+- En la clase Board
+    - Se elimino el atributo __barra__, ahora las fichas de la barra se encuentran en las columnas [24] y [25] de el atributo __columnas__ para implementar de manera mas practica las funciones que tengan que ver con la barra. 
+
+
+## [31/08/2025] commit 3
+
+### Agregado
+- En la clase 'Game'
+    - Fueron creados los métodos:
+        - can_finish_checkers_p1() y can_finish_checkers_p2() que verifican si cada jugador puede empezar a sacas sus fichas del tablero. 
+        - win_condition(player) que verifica si el jugador indicado en el argumento (1 o 2) ha ganado. 
+    - Tests para estos metodos
+### Alterado
+Se modifico la orientacion de las columnas del tablero, que seguia una numeracion antihoraria, cuando en realidad debe ser horaria. Se adaptaron todos los metodos y tests que se habian creado teniendo en cuenta la orientacion antihoraria. 
+## [31/08/2025] commit 2
+
+### Agregado
+- En la clase 'Game'
+    - Fueron creados los métodos:
+        - move_checker(fro, to), que de acuerdo a los argumentos, mueve una ficha de una columna a otra. No toma en cuenta las condiciones necesarias para hacer un movimiento valido. 
+        - roll_dice(), toma el método roll_dice() de la clase 'Dice' para conseguir dos numeros aleatorios entre 1 y 6. 
+        - available_move(fro, to) verifica que se cumplan las condiciones necesarias para que un movimiento de ficha sea valido de acorde a las reglas del juego. 
+    - Tests para estos métodos. 
+## [31/08/2025] commit 1
+
+### Agregado
+- Fue creada la clase 'Game'
+    - Atributos:
+        - __board__, es un objeto de clase 'Board'. 
+        - __dice__, es un objeto de clase 'Dice'. 
+        - __checker_1__, es un objeto de clase 'Checker'. 
+        - __checker_2__, es un objeto de clase 'Checker'. 
+        - __player_1__, es un objeto de clase 'Player'. 
+        - __player_2__, es un objeto de clase 'Player'. 
+    - Métodos:
+        - prepare_board(), deja las 30 fichas en sus lugares correspondientes para iniciar el juego. 
+    - Tests para prepare_board()
+- Método clear_board() que limpia los objetos Board, dejando 0 fichas en cada columna. Tests para este método. 
+
+### Alterado
+- Los métodos add_checker(column, quan), remove_checker(column, quan) y put_checker(column, quan) ahora aceptan el argumento quan para determinar el numero de fichas a agregar o restar, con un valor por defecto de 1. 
 ## [30/08/2025] commit 3
 
 ### Agregado
@@ -20,7 +73,7 @@ Todos los cambios notables del proyecto van a ser documentados en este changelog
         - clear_dice() le da el valor 0 a ambos dados. 
     - Se configuraron los tests para todos los métodos de la clase. 
 
-## [30/08/2025]commit 1
+## [30/08/2025] commit 1
 
 ### Agregado
 - Fue creada la clase 'Checker'
