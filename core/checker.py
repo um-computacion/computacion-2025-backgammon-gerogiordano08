@@ -10,4 +10,6 @@ class Checker:
             return self.__symbol_2__
         else: 
             return ' '
+    def get_type(self):
+        return self.__type__
         

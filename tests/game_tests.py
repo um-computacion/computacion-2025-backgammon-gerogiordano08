@@ -43,21 +43,24 @@ class GameTests(unittest.TestCase):
     def test_roll_dice(self):
         """ Compara los dados que salen con el método roll_dice() (de la clase Game) a el atributo __dice__. """
         g = self.setUp()[0]
-        self.assertEqual(g.roll_dice(), g.get_dice().get_dice())
+        g.roll_dice()
+        for x in g.get_dice().get_dice_results():
+            self.assertIn(x, (1, 2, 3, 4, 5, 6))
     def test_available_move(self):
         """ Verifica que available_move(fro, to) devuelve True para las condiciones suficientes y False para las condiciones insuficientes. """
         g = self.setUp()[0]
+        
         self.assertTrue(
             # de 'x' a 0
-            g.available_move(0, 2) and 
+            g.available_move(0, 2, g.__player_1__) and 
             # de 'x' a 'x'
-            g.available_move(0, 11)
+            g.available_move(0, 11, g.__player_1__)
         )
         self.assertFalse(
             # de 0 a 'x'
-            g.available_move(3, 11) and
+            g.available_move(3, 11, g.__player_1__) and
             # de 'x' a 'o'
-            g.available_move(0, 4)
+            g.available_move(0, 4, g.__player_1__)
         )
     def test_can_finish_checkers_p1(self):
         """ Este test verifica que el método can_finish_checkers_p1() devuelve True solo cuando se cumple la condicion. """
@@ -96,5 +99,10 @@ class GameTests(unittest.TestCase):
         g.add_checker(25)
         self.assertTrue(g.check_bar(g.get_player_1()))
         self.assertTrue(g.check_bar(g.get_player_2()))
-        
-
+    def test_finish_checker(self):
+        """ Verifica que la funcion finish_checker(col, player) devuelve True cuando exitosamente termina una ficha. """
+        g, c, q, col = self.setUp()
+        self.assertFalse(g.finish_checker(18, g.__player_1__))
+        for x in range(0, 18):
+            col[x][q] = 0
+        self.assertTrue(g.finish_checker(18, g.__player_1__))
