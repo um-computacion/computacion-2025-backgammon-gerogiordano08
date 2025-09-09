@@ -2,6 +2,21 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog. 
 
+## [09/09/2025]
+
+### Agregado
+- En la clase Game
+    - Se termina el desarrollo del método turn(player), logica de turno. 
+    - Se agrega el test para el método finish_checker(col, player). 
+- En la clase Player
+    - Ahora todo objeto Player tiene atributo __bar_index__, que describe el indice de la barra para ese jugador especifico. 
+- En la clase Checker
+    - get_type()
+
+### Alterado
+- En la clase Dice
+    - Se cambió la lógica del getter get_dice(). Para empezar se cambia el nombre, ahora get_dice_results(). Además, si salen dobles, el getter devuelve esa cantidad cuatro veces como tupla. 
+    
 ## [08/09/2025]
 
 ### Agregado

@@ -37,22 +37,68 @@ class Game:
             self.__board__.add_checker(to)
     def roll_dice(self):
         """ Usa el método roll_dice() de la clase Dice. """
-        self.__dice__.roll_dice()
-        dice = self.__dice__.get_dice()
-        return dice and dice if dice[0] == dice[1] else dice
+        self.__dice__.roll_dice()  
     def turn(self, player: Player):
+        """ El método define la lógica principal de un turno individual en el juego, desde tirar los dados hasta que se complete totalmente el turno para pasar al próximo jugador. """
+        # Definición de variables locales
+        turn_player_checker: str = self.__checker_1__.get_symbol() if player.get_checker_type() == self.__checker_1__.get_type() else self.__checker_2__.get_symbol()
+        turn_player_bar = player.get_bar_index()
+        other_player_bar = 24 if turn_player_bar == 25 else 25
+        has_checkers_in_bar = True if self.__board__.get_columnas()[turn_player_bar]['quantity'] > 0 else False
+        # Comienza el flow del turno
         print(f"Turno de {player.get_name()}.")
-        dice = self.roll_dice()
-        doubles = False
+        self.roll_dice()
+        dice = list(self.get_dice().get_dice_results())
+        
+        # Muestra dados disponibles
         if len(dice) == 2:
             print(f"Dado 1: {dice[0]}. \n Dado 2: {dice[1]}") 
         else:
             print(f"Dado 1: {dice[0]}. \n Dado 2: {dice[1]}. \n Tienes dobles!" )
-            doubles = True
-        if doubles == False:
-            for x in range(0, 2):
-                successful_move = False
-                while not successful_move:
+        # Comienza loop que maneja cada movimiento disponible
+        for x in range(len(dice)):
+            successful_move = False
+            while not successful_move:
+                # Caso 1: fichas en barra. OBLIGADO A SACARLAS. 
+                if has_checkers_in_bar:
+                    print("Tienes fichas en la barra. Estas obligado a usar tus movimientos en esas fichas hasta que no quede ninguna.")                     
+                    available_dice_indexes = []
+                    for d in dice:
+                        if self.available_move(turn_player_bar, turn_player_bar + d, player):
+                            available_dice_indexes.append(dice.index(d))
+                    # Caso 1-1: no puede usar ninguno de los dados para sacar fichas de la barra. Pierde el turno.
+                    if len(available_dice_indexes) == 0:
+                        print("Mala suerte! No puedes usar ninguno de tus dados para sacar fichas de la barra. Pierdes el turno. ")
+                        successful_move = True
+                        return
+                    # Caso 1-2: los dados que no se pueden usar son extraidos de la lista dice. 
+                    for x in dice:
+                        dice.pop(x) if x not in available_dice_indexes else None
+                    fro: int = turn_player_bar
+                    print("Dados disponibles:")
+                    for x in dice:
+                        print(f"Dado {x+1}: {dice[x]}")
+                    used_die: int = int(input("Que dado usaras? (ingresa la cantidad que muestra el dado)"))
+                    if used_die not in dice:
+                        print("Ese dado no esta disponible. ")
+                        return
+                    else:
+                        used_die_index = dice.index(used_die)
+                    to: int = fro + used_die
+                    if self.available_move(fro, fro+used_die, player):
+                        if self.__board__.get_columnas()[to]['checker'] == turn_player_checker:
+                            self.add_checker(to)
+                            self.remove_checker(fro)
+                        else:
+                            self.put_checker(to, turn_player_checker)
+                            self.remove_checker(fro)
+                            self.add_checker(other_player_bar)
+                            successful_move = True
+                    else:
+                        print("El movimiento no se puede completar! Verifica que sea valido e intentalo de nuevo. ")
+                        return
+                else:
+                    # Caso 2: no tiene fichas en barra. Puede elegir movimientos
                     fro: int = int(input("Que ficha quieres mover? (ingresa columna)"))
                     print("Dados disponibles:")
                     for x in dice:
@@ -61,20 +107,35 @@ class Game:
                     if used_die not in dice:
                         print("Ese dado no esta disponible. ")
                         return
+                    else:
+                        used_die_index = dice.index(used_die)
                     to: int = fro + used_die
                     finishing_move = True if to > 23 else False
-
+                    # Caso 2-1: el jugador intenta sacar una ficha del tablero. 
                     if finishing_move:
                         if self.finish_checker(fro, player):
                             successful_move = True
                         else:
                             print("El movimiento no se puede completar! Verifica que sea valido e intentalo de nuevo")
                             return
+                    # Caso 2-2: el jugador intenta hacer un movimiento normal.  
                     else:
                         if self.available_move(fro, fro+used_die, player):
-                            successful_move = True
+                            if self.__board__.get_columnas()[to]['checker'] == turn_player_checker:
+                                self.add_checker(to)
+                                self.remove_checker(fro)
+                            else:
+                                self.put_checker(to, turn_player_checker)
+                                self.remove_checker(fro)
+                                self.add_checker(other_player_bar)
+                                successful_move = True
                         else:
+                            print("El movimiento no se puede completar! Verifica que sea valido e intentalo de nuevo. ")
                             return
+                # Si no hay ningun problema, succesful_move va a ser True y se va a seguir con el proximo dado. 
+                dice.pop(used_die_index)
+                print("El movimiento fue completado exitosamente!")
+                self.show_board()
                     
     # Verificadores condicionales
 
