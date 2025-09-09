@@ -40,19 +40,59 @@ class Game:
         self.__dice__.roll_dice()
         dice = self.__dice__.get_dice()
         return dice and dice if dice[0] == dice[1] else dice
-    
+    def turn(self, player: Player):
+        print(f"Turno de {player.get_name()}.")
+        dice = self.roll_dice()
+        doubles = False
+        if len(dice) == 2:
+            print(f"Dado 1: {dice[0]}. \n Dado 2: {dice[1]}") 
+        else:
+            print(f"Dado 1: {dice[0]}. \n Dado 2: {dice[1]}. \n Tienes dobles!" )
+            doubles = True
+        if doubles == False:
+            for x in range(0, 2):
+                successful_move = False
+                while not successful_move:
+                    fro: int = int(input("Que ficha quieres mover? (ingresa columna)"))
+                    print("Dados disponibles:")
+                    for x in dice:
+                        print(f"Dado {x+1}: {dice[x]}")
+                    used_die: int = int(input("Que dado usaras? (ingresa la cantidad que muestra el dado)"))
+                    if used_die not in dice:
+                        print("Ese dado no esta disponible. ")
+                        return
+                    to: int = fro + used_die
+                    finishing_move = True if to > 23 else False
+
+                    if finishing_move:
+                        if self.finish_checker(fro, player):
+                            successful_move = True
+                        else:
+                            print("El movimiento no se puede completar! Verifica que sea valido e intentalo de nuevo")
+                            return
+                    else:
+                        if self.available_move(fro, fro+used_die, player):
+                            successful_move = True
+                        else:
+                            return
+                    
     # Verificadores condicionales
 
-    def available_move(self, fro, to):
+    def available_move(self, fro:int, to:int, player: Player):
         """ Verifica que un movimiento sea válido segun las normas del juego. """
         columnas = self.__board__.get_columnas()
-        if columnas[fro]['quantity'] > 0:
-            if columnas[to]['quantity'] < 2 or columnas[fro]['checker'] == columnas[to]['checker']:
-                return True
-            else: 
-                return False
-        else:
+        player_checker = self.__checker_1__ if player.get_checker_type() == 1 else self.__checker_2__
+
+        if to > 23:
             return False
+        else:
+            if columnas[fro]['checker'] == player_checker.get_symbol() and columnas[fro]['quantity'] > 0:
+                if columnas[to]['quantity'] < 2 or columnas[fro]['checker'] == columnas[to]['checker']:
+                    return True
+                else: 
+                    return False
+            else:
+                return False
     def can_finish_checkers_p1(self):
         """ Verifica que el jugador 1 puede empezar a sacar sus fichas del tablero en la fase final. """
         for x in range(0, 18):
@@ -82,16 +122,24 @@ class Game:
         """ Verifica si el jugador en cuestion tiene fichas en la barra. """
         col = 24 if player.get_checker_type() == 1 else 25
         return True if self.__board__.get_columnas()[col]['quantity'] > 0 else False
-    
+    def finish_checker(self, col, player: Player):
+        """ Verifica si el jugador puede terminar una ficha y la termina. Ademas devuelve True si fue exitoso y False si no lo fue. """
+        can_p_finish_checkers = self.can_finish_checkers_p1() if player.get_checker_type() == 1 else self.can_finish_checkers_p2()
+        if can_p_finish_checkers:
+            self.remove_checker(col)
+            return True
+        else:
+            return False
+
     # Métodos de clase Board
 
-    def add_checker(self, column, quan = 1):
+    def add_checker(self, column:int, quan = 1):
         """ Este método aumenta por 'quan' unidades (1 por defecto) la cantidad de fichas que se encuentran en una columna del tablero, accediendo al atributo __columnas__. Debe haberse configurado la ficha previamente para que su uso tenga sentido. """
         self.__board__.add_checker(column, quan)
-    def remove_checker(self, column, quan = 1):
+    def remove_checker(self, column:int, quan = 1):
         """ Este método reduce por 'quan' unidades (1 por defecto) la cantidad de fichas que se encuentran en una columna del tablero, accediendo al atributo __columnas__. Debe haberse configurado la ficha previamente y la cantidad debe ser mayor que 0 para que su uso tenga sentido. """
         self.__board__.remove_checker(column, quan)
-    def put_checker(self, column, checker, quan = 1):
+    def put_checker(self, column:int, checker:str, quan = 1):
         """ Este método configura una ficha especifica en una columna, determinando que ficha es y la cantidad a 'quan' unidades (1 por defecto). """
         self.__board__.put_checker(column, checker, quan)
     def clear_board(self):

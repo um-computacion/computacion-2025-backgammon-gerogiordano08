@@ -2,7 +2,18 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog. 
 
-## [31/08/2025] 
+## [08/09/2025]
+
+### Agregado
+- En la clase Game
+    - Se agrego el método finish_checker(col, player) para poder completar la finalizacion de una ficha si es permitido. 
+    - Se comenzo con el desarrollo del método turn(player) que maneja la logica de un turno dentro del juego. 
+
+### Alterado
+- En la clase Game
+    - Se altero el método available_move(fro, to, player), que ahora es mas completo, verifica mas condiciones. 
+
+## [04/09/2025] 
 
 ### Agregado
 - En la clase 'Game'
