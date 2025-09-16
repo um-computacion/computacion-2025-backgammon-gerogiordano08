@@ -2,7 +2,15 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog. 
 
-## [15/09/2025]
+## [15/09/2025] commit 2
+
+### Agregado
+- Se implementó coverage, con sus archivos necesarios
+- Se implementó pylint, con sus archivos necesarios
+
+### Alterado
+- Se agregaron requerimentos en requirements.txt
+## [15/09/2025] commit 1
 
 ### Agregado
 - En la clase Game

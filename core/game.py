@@ -87,8 +87,8 @@ class Game:
                     if used_die not in dice:
                         print("Ese dado no esta disponible. ")
                         return
-                    else:
-                        used_die_index = dice.index(used_die)
+
+                    used_die_index = dice.index(used_die)
                     to: int = turn_player_bar_actual_index + used_die if fro == 24 else turn_player_bar_actual_index - used_die
                     if self.available_move(fro, fro+used_die, player):
                         if self.__board__.get_columnas()[to]['checker'] == turn_player_checker:
@@ -112,13 +112,11 @@ class Game:
                     if used_die not in dice:
                         print("Ese dado no esta disponible. ")
                         return
-                    else:
-                        used_die_index = dice.index(used_die)
+                    used_die_index = dice.index(used_die)
                     to: int = fro + used_die if player.get_checker_type() == 1 else fro - used_die
                     finishing_move = True if to > 23 else False
                     # Caso 2-1: el jugador intenta sacar una ficha del tablero. 
                     if finishing_move:
-                        
                         if self.finish_checker(fro, player):
                             successful_move = True
                         else:
@@ -152,14 +150,13 @@ class Game:
 
         if to > 23:
             return False
-        else:
-            if columnas[fro]['checker'] == player_checker.get_symbol() and columnas[fro]['quantity'] > 0:
-                if columnas[to]['quantity'] < 2 or columnas[fro]['checker'] == columnas[to]['checker']:
-                    return True
-                else: 
-                    return False
-            else:
+        if columnas[fro]['checker'] == player_checker.get_symbol() and columnas[fro]['quantity'] > 0:
+            if columnas[to]['quantity'] < 2 or columnas[fro]['checker'] == columnas[to]['checker']:
+                return True
+            else: 
                 return False
+        else:
+            return False
     def can_finish_checkers_p1(self):
         """ Verifica que el jugador 1 puede empezar a sacar sus fichas del tablero en la fase final. """
         for x in range(0, 18):
