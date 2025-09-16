@@ -43,7 +43,11 @@ class Game:
         # Definición de variables locales
         turn_player_checker: str = self.__checker_1__.get_symbol() if player.get_checker_type() == self.__checker_1__.get_type() else self.__checker_2__.get_symbol()
         turn_player_bar = player.get_bar_index()
+        # turn_player_bar es el indice de la barra del jugador de este turno en el atributo columnas de la clase Board
         other_player_bar = 24 if turn_player_bar == 25 else 25
+
+        turn_player_bar_actual_index = 5 if turn_player_bar == 24 else 18
+        # La variable 'turn_player_bar_actual_index' es igual al indice de columna que se debe usar practicamente como to (desde) en los métodos que mueven fichas. Esto es porque los indices que usan las barras en la clase Board son 24 y 25, para no interferir con el conteo de columnas. 
         has_checkers_in_bar = True if self.__board__.get_columnas()[turn_player_bar]['quantity'] > 0 else False
         # Comienza el flow del turno
         print(f"Turno de {player.get_name()}.")
@@ -52,9 +56,9 @@ class Game:
         
         # Muestra dados disponibles
         if len(dice) == 2:
-            print(f"Dado 1: {dice[0]}. \n Dado 2: {dice[1]}") 
+            print(f"Dado 1: {dice[0]}. \nDado 2: {dice[1]}") 
         else:
-            print(f"Dado 1: {dice[0]}. \n Dado 2: {dice[1]}. \n Tienes dobles!" )
+            print(f"Dado 1: {dice[0]}. \nDado 2: {dice[1]}. \n Tienes dobles!" )
         # Comienza loop que maneja cada movimiento disponible
         for x in range(len(dice)):
             successful_move = False
@@ -64,7 +68,7 @@ class Game:
                     print("Tienes fichas en la barra. Estas obligado a usar tus movimientos en esas fichas hasta que no quede ninguna.")                     
                     available_dice_indexes = []
                     for d in dice:
-                        if self.available_move(turn_player_bar, turn_player_bar + d, player):
+                        if self.available_move(turn_player_bar, turn_player_bar_actual_index + d, player):
                             available_dice_indexes.append(dice.index(d))
                     # Caso 1-1: no puede usar ninguno de los dados para sacar fichas de la barra. Pierde el turno.
                     if len(available_dice_indexes) == 0:
@@ -73,18 +77,19 @@ class Game:
                         return
                     # Caso 1-2: los dados que no se pueden usar son extraidos de la lista dice. 
                     for x in dice:
-                        dice.pop(x) if x not in available_dice_indexes else None
+                        dice.pop(dice.index(x)) if dice.index(x) not in available_dice_indexes else None
                     fro: int = turn_player_bar
                     print("Dados disponibles:")
                     for x in dice:
-                        print(f"Dado {x+1}: {dice[x]}")
+                        print(f"Dado {dice.index(x)+1}: {x}")
+                        #cuando hay dobles imprime siempre dado 1, dice.index(x) va a ser siempre 0, porque son todos iguales. Solucionar
                     used_die: int = int(input("Que dado usaras? (ingresa la cantidad que muestra el dado)"))
                     if used_die not in dice:
                         print("Ese dado no esta disponible. ")
                         return
                     else:
                         used_die_index = dice.index(used_die)
-                    to: int = fro + used_die
+                    to: int = turn_player_bar_actual_index + used_die if fro == 24 else turn_player_bar_actual_index - used_die
                     if self.available_move(fro, fro+used_die, player):
                         if self.__board__.get_columnas()[to]['checker'] == turn_player_checker:
                             self.add_checker(to)
@@ -109,10 +114,11 @@ class Game:
                         return
                     else:
                         used_die_index = dice.index(used_die)
-                    to: int = fro + used_die
+                    to: int = fro + used_die if player.get_checker_type() == 1 else fro - used_die
                     finishing_move = True if to > 23 else False
                     # Caso 2-1: el jugador intenta sacar una ficha del tablero. 
                     if finishing_move:
+                        
                         if self.finish_checker(fro, player):
                             successful_move = True
                         else:
@@ -216,6 +222,8 @@ class Game:
         return self.__board__
     def get_dice(self):
         return self.__dice__
+    def set_dice(self, dice):
+        self.__dice__ = dice
     def get_player_1(self):
         return self.__player_1__
     def get_player_2(self):
@@ -224,5 +232,10 @@ class Game:
         return self.__checker_1__
     def get_checker_2(self):
         return self.__checker_2__
-g = Game('a', 'b')
-g.prepare_board()
+#g = Game('a', 'b')
+#g.prepare_board()
+#g.add_checker(24)
+#print(g.available_move(24, 9, g.get_player_1()))
+#print(g.available_move(24, 11, g.get_player_1()))
+
+#g.turn(g.get_player_1())

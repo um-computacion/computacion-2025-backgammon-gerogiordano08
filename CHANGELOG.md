@@ -2,6 +2,15 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog. 
 
+## [15/09/2025]
+
+### Agregado
+- En la clase Game
+    - Se agrega el setter set_dice()
+
+### Alterado
+- En la clase Game
+    - Se modifica el método turn(), que tenia varios errores.
 ## [09/09/2025]
 
 ### Agregado

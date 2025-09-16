@@ -1,5 +1,6 @@
 from core.game import Game
 import unittest
+from unittest.mock import Mock, patch
 class GameTests(unittest.TestCase):
     def setUp(self):
         g = Game('a', 'b')
