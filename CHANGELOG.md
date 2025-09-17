@@ -2,6 +2,12 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog. 
 
+## [16/09/2025] commit 2
+- Creado el archivo cli.py, junto con una version basica que hereda cmd e incluye comandos claves.
+## [16/09/2025] commit 1
+
+### Alterado
+- Se escribio la justificacion hasta la fecha en justificacion.md
 ## [15/09/2025] commit 2
 
 ### Agregado

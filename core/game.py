@@ -1,7 +1,7 @@
-from core.player import Player
-from core.checker import Checker
-from core.dice import Dice
-from core.board import Board
+from player import Player
+from checker import Checker
+from dice import Dice
+from board import Board
 
 class Game:
     def __init__(self, p1_name, p2_name):
@@ -63,6 +63,7 @@ class Game:
         for x in range(len(dice)):
             successful_move = False
             while not successful_move:
+                self.__board__.show_board()
                 # Caso 1: fichas en barra. OBLIGADO A SACARLAS. 
                 if has_checkers_in_bar:
                     print("Tienes fichas en la barra. Estas obligado a usar tus movimientos en esas fichas hasta que no quede ninguna.")                     
@@ -107,7 +108,7 @@ class Game:
                     fro: int = int(input("Que ficha quieres mover? (ingresa columna)"))
                     print("Dados disponibles:")
                     for x in dice:
-                        print(f"Dado {x+1}: {dice[x]}")
+                        print(f"Dado {dice.index(x)+1}: {x}")
                     used_die: int = int(input("Que dado usaras? (ingresa la cantidad que muestra el dado)"))
                     if used_die not in dice:
                         print("Ese dado no esta disponible. ")
