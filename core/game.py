@@ -1,7 +1,7 @@
-from player import Player
-from checker import Checker
-from dice import Dice
-from board import Board
+from core.player import Player
+from core.checker import Checker
+from core.dice import Dice
+from core.board import Board
 
 class Game:
     def __init__(self, p1_name, p2_name):
