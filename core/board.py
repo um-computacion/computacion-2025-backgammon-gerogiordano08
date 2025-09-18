@@ -1,11 +1,26 @@
+"""Modulo Board. Contiene la definicion de la clase Board."""
 class Board:
+    """La clase Board define la lógica del tablero junto con
+    todos los metodos necesarios para la actividad sobre este. Atributo: columnas (dict)."""
     def __init__(self):
 
-        self.__columnas__ = [{'checker' : 'x', 'quantity' : 9}, {'checker' : 'x', 'quantity' : 3}, {'checker' : 'x', 'quantity' : 5}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
-                             {'checker' : 'o', 'quantity' : 3}, {'checker' : 'o', 'quantity' : 4}, {'checker' : 'o', 'quantity' : 4}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
-                             {'bar': True, 'checker' : 'x', 'quantity' : 0}, {'bar': True, 'checker' : 'o', 'quantity' : 0}]
+        self.__columnas__ = [{'checker' : 'x', 'quantity' : 9}, {'checker' : 'x', 'quantity' : 3},
+                             {'checker' : 'x', 'quantity' : 5}, {'checker' : '', 'quantity' : 0},
+                             {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
+                             {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
+                             {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
+                             {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
+                             {'checker' : 'o', 'quantity' : 3}, {'checker' : 'o', 'quantity' : 4},
+                             {'checker' : 'o', 'quantity' : 4}, {'checker' : '', 'quantity' : 0},
+                             {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
+                             {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
+                             {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
+                             {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
+                             {'bar': True, 'checker' : 'x', 'quantity' : 0},
+                             {'bar': True, 'checker' : 'o', 'quantity' : 0}]
     def show_board(self):
-        """ Este método imprime el tablero, poniendo el método checker(column, level) con las respectivas coordenadas en cada espacio ocupable por fichas del tablero."""
+        """ Este método imprime el tablero, poniendo el método checker(column, level)
+        con las respectivas coordenadas en cada espacio ocupable por fichas del tablero."""
         c = self.checker
 
         print("                          TABLERO DE BACKGAMMON")
@@ -29,39 +44,41 @@ class Board:
         print("          12  11  10   9   8   7    |BAR|    6   5   4   3   2   1")
         print("- La columna central es la **BAR** (barra).")
         print("- Si un punto tiene más de 5 fichas, usa (6), (7), etc.")
-    
     def checker(self, column:int, level:int):
-        """ Este método devuelve la ficha correspondiente (o ninguna) dependiendo de las coordenadas del tablero y la ocupacion, que analiza en el atributo __columnas__ y __barra__ (para fichas en las barras)  """
+        """ Este método devuelve la ficha correspondiente (o ninguna)
+        dependiendo de las coordenadas del tablero y la ocupacion,
+        que analiza en el atributo __columnas__ y __barra__ (para fichas en las barras)  """
         q = self.__columnas__[column]['quantity']
         if  q == 0:
             return ' '
-        elif q > 5 and level == 5:
+        if q > 5 and level == 5:
             return q
-        elif q >= level:
+        if q >= level:
             return self.__columnas__[column]["checker"]
-        else:
-            return ' '
-            
+        return ' '
     def add_checker(self, column:int, quan = 1):
-        """ Este método aumenta por 'quan' unidades (1 por defecto) la cantidad de fichas que se encuentran en una columna del tablero, accediendo al atributo __columnas__. Debe haberse configurado la ficha previamente para que su uso tenga sentido. """
+        """ Este método aumenta por 'quan' unidades (1 por defecto) 
+        la cantidad de fichas que se encuentran en una columna del tablero, 
+        accediendo al atributo __columnas__. Debe haberse configurado 
+        la ficha previamente para que su uso tenga sentido. """
         self.__columnas__[column]['quantity'] += quan
-    
     def remove_checker(self, column:int, quan = 1):
-        """ Este método reduce por 'quan' unidades (1 por defecto) la cantidad de fichas que se encuentran en una columna del tablero, accediendo al atributo __columnas__. Debe haberse configurado la ficha previamente y la cantidad debe ser mayor que 0 para que su uso tenga sentido. """
+        """ Este método reduce por 'quan' unidades (1 por defecto)
+        la cantidad de fichas que se encuentran en una columna del tablero,
+        accediendo al atributo __columnas__. Debe haberse configurado
+        la ficha previamente y la cantidad debe ser mayor que 0 para que su uso tenga sentido. """
         self.__columnas__[column]['quantity'] -= quan
-    
     def put_checker(self, column:int, checker:str, quan = 1):
-        """ Este método configura una ficha especifica en una columna, determinando que ficha es y la cantidad a 'quan' unidades (1 por defecto). """
+        """ Este método configura una ficha especifica en una columna,
+        determinando que ficha es y la cantidad a 'quan' unidades (1 por defecto). """
         self.__columnas__[column]['checker'] = checker
         self.__columnas__[column]['quantity'] = quan
     def clear_board(self):
-        """ Este método limpia el tablero dejando la ficha ' ' con cantidad = 0 en todas las columnas. """
+        """ Este método limpia el tablero dejando la ficha ' '
+        con cantidad = 0 en todas las columnas. """
         for x in range(0,24):
             self.put_checker(x, ' ')
             self.__columnas__[x]['quantity'] = 0
     def get_columnas(self):
         """ Este método devuelve el atributo __columnas__ para su uso externamente. """
         return self.__columnas__
-
-# b = Board()
-# b.show_board()
