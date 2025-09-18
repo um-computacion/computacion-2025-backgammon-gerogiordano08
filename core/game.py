@@ -41,7 +41,7 @@ class Game:
     def turn(self, player: Player):
         """ El método define la lógica principal de un turno individual en el juego, desde tirar los dados hasta que se complete totalmente el turno para pasar al próximo jugador. """
         # Definición de variables locales
-        turn_player_checker: str = self.__checker_1__.get_symbol() if player.get_checker_type() == self.__checker_1__.get_type() else self.__checker_2__.get_symbol()
+        turn_player_checker: str = self.__checker_1__.get_symbol() if player.get_checker_type() == self.__checker_1__.get_c_type() else self.__checker_2__.get_symbol()
         turn_player_bar = player.get_bar_index()
         # turn_player_bar es el indice de la barra del jugador de este turno en el atributo columnas de la clase Board
         other_player_bar = 24 if turn_player_bar == 25 else 25
