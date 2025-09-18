@@ -1,7 +1,11 @@
 # Changelog
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog. 
-## [18/09/2025]
+## [17/09/2025] commit 3
+
+### Alterado
+- Usando pylint, se modificaron los archivos checker.py, player.py y dice.py para llegar a un puntajen de 10/10.
+## [17/09/2025] commit 2
 - Esta listo el archivo main.py. A partir de ahora se puede correr el juego usando python main.py desde el directorio del programa
 ## [17/09/2025] commit 1
 
