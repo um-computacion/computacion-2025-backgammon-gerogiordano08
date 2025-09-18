@@ -1,6 +1,6 @@
 import cmd
-from game import Game
-from player import Player
+from core.game import Game
+from core.player import Player
 class CLI(cmd.Cmd):
     intro = 'Bienvenido a Backgammon por Gerónimo Giordano. Escribe \'ayuda\' para ver los comandos disponibles, \'reglas\' para ver las reglas del juego. Cuando estes listo, ingresa \'start\' para iniciar el juego.'
     prompt = '(backgammon) >>> '
@@ -68,5 +68,3 @@ class CLI(cmd.Cmd):
                 }
         if line not in reglas: line = ""
         print(f"\n{reglas[line]}")
-if __name__ == '__main__':
-    CLI().cmdloop()

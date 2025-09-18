@@ -1,6 +1,8 @@
 # Changelog
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog. 
+## [18/09/2025]
+- Esta listo el archivo main.py. A partir de ahora se puede correr el juego usando python main.py desde el directorio del programa
 ## [17/09/2025] commit 1
 
 ### Agragado
