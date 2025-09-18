@@ -1,13 +1,26 @@
 # Changelog
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog. 
+## [17/09/2025] commit 1
+
+### Agragado
+- En la clase CLI se completo el metodo do_reglas() para que el jugador pueda consultar las reglas durante la partida.
+
+## [16/09/2025] commit 3
+
+### Agregado
+- Se termino la primera version de la CLI
 
 ## [16/09/2025] commit 2
+
+### Agregado
 - Creado el archivo cli.py, junto con una version basica que hereda cmd e incluye comandos claves.
+
 ## [16/09/2025] commit 1
 
 ### Alterado
 - Se escribio la justificacion hasta la fecha en justificacion.md
+
 ## [15/09/2025] commit 2
 
 ### Agregado
