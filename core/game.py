@@ -51,16 +51,6 @@ class Game:
             turn_player_checker: str = self.__checker_1__.get_symbol()
         else:
             turn_player_checker: str = self.__checker_2__.get_symbol()
-        turn_player_bar = player.get_bar_index()
-        # turn_player_bar es el indice de la barra del jugador de
-        # este turno en el atributo columnas de la clase Board
-        other_player_bar = 24 if turn_player_bar == 25 else 25
-
-        turn_player_bar_actual_index = 5 if turn_player_bar == 24 else 18
-        # La variable 'turn_player_bar_actual_index' es
-        # igual al indice de columna que se debe usar practicamente como
-        # to (desde) en los métodos que mueven fichas. Esto es porque los indices que usan
-        # las barras en la clase Board son 24 y 25, para no interferir con el conteo de columnas.
         has_checkers_in_bar = bool(self.__board__.get_columnas()[turn_player_bar]['quantity'] > 0)
         # Comienza el flow del turno
         print(f"Turno de {player.get_name()}.")
@@ -76,60 +66,54 @@ class Game:
             successful_move = False
             while not successful_move:
                 self.__board__.show_board()
-                    # Caso 2: no tiene fichas en barra. Puede elegir movimientos
-
-                # Si no hay ningun problema, succesful_move va a ser
-                # True y se va a seguir con el proximo dado.
-                dice.pop(used_die_index)
-                print("El movimiento fue completado exitosamente!")
-                self.__board__.show_board()
+                if has_checkers_in_bar:
+                    successful_move, used_die = self.turn_fichas_barra(player, dice, turn_player_checker)
+            dice.pop(used_die) if used_die != None else None
+            print("El movimiento fue completado exitosamente!")
+            self.__board__.show_board()
     # Verificadores condicionales
-    def turn_fichas_barra(self):
+    def turn_fichas_barra(self, player: Player, dice, turn_player_checker):
         print("Tienes fichas en la barra. Estas obligado a usar " \
         "tus movimientos en esas fichas hasta que no quede ninguna.")
         available_dice_indexes = []
-        tpbai = turn_player_bar_actual_index
+        fro = player.get_bar_practical_index()
         for d in dice:
-            if self.available_move(turn_player_bar, tpbai + d, player):
+            if self.available_move(fro, fro + d, player):
                 available_dice_indexes.append(dice.index(d))
-                # Caso 1-1: no puede usar ninguno de los dados para
-                # sacar fichas de la barra. Pierde el turno.
-                if len(available_dice_indexes) == 0:
-                    print("Mala suerte! No puedes usar ninguno de " \
-                    "tus dados para sacar fichas de la barra. Pierdes el turno. ")
-                    successful_move = True
-                    return
-                # Caso 1-2: los dados que no se pueden usar son extraidos de la lista dice.
-                for x in dice:
-                    if dice.index(x) not in available_dice_indexes:
-                        dice.pop(dice.index(x))
-                fro: int = turn_player_bar
-                print("Dados disponibles:")
-                for x in dice:
-                    print(f"Dado {dice.index(x)+1}: {x}")
-                    #cuando hay dobles imprime siempre dado 1, dice.index(x)
-                    # va a ser siempre 0, porque son todos iguales. Solucionar
-                used_die: int = int(input("Que dado usaras? (ingresa la cantidad " \
-                "que muestra el dado)"))
-                if used_die not in dice:
-                    print("Ese dado no esta disponible. ")
-                    return
-
-                used_die_index = dice.index(used_die)
-                to: int = tpbai + used_die if fro == 24 else tpbai - used_die
-                if self.available_move(fro, fro+used_die, player):
-                    if self.__board__.get_columnas()[to]['checker'] == turn_player_checker:
-                        self.__board__.add_checker(to)
-                        self.__board__.remove_checker(fro)
-                    else:
-                        self.__board__.put_checker(to, turn_player_checker)
-                        self.__board__.remove_checker(fro)
-                        self.__board__.add_checker(other_player_bar)
-                        successful_move = True
-                else:
-                    print("El movimiento no se puede completar! " \
-                    "Verifica que sea valido e intentalo de nuevo. ")
-                    return
+        # Caso 1-1: no puede usar ninguno de los dados para
+        # sacar fichas de la barra. Pierde el turno.
+        if len(available_dice_indexes) == 0:
+            print("Mala suerte! No puedes usar ninguno de " \
+            "tus dados para sacar fichas de la barra. Pierdes el turno. ")
+            return True, None
+        # Caso 1-2: los dados que no se pueden usar son extraidos de la lista dice.
+        for x in dice:
+            if dice.index(x) not in available_dice_indexes:
+                dice.pop(dice.index(x))
+        print("Dados disponibles:")
+        for x in dice:
+            print(f"Dado {dice.index(x)+1}: {x}")
+            #cuando hay dobles imprime siempre dado 1, dice.index(x)
+            # va a ser siempre 0, porque son todos iguales. Solucionar
+        used_die: int = int(input("Que dado usaras? (ingresa la cantidad " \
+        "que muestra el dado)"))
+        if used_die not in dice:
+            print("Ese dado no esta disponible. ")
+            return False, None
+        to: int = fro + used_die if fro == 5 else fro - used_die
+        if self.available_move(fro, fro+used_die, player):
+            if self.__board__.get_columnas()[to]['checker'] == turn_player_checker:
+                self.__board__.add_checker(to)
+                self.__board__.remove_checker(fro)
+            else:
+                self.__board__.put_checker(to, turn_player_checker)
+                self.__board__.remove_checker(fro)
+                self.__board__.add_checker(player.get_opp_bar_index())
+            return True, used_die
+        else:
+            print("El movimiento no se puede completar! " \
+            "Verifica que sea valido e intentalo de nuevo. ")
+        return False, None
     def turn_normal(self):
         fro: int = int(input("Que ficha quieres mover? (ingresa columna)"))
         print("Dados disponibles:")
