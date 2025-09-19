@@ -64,22 +64,22 @@ class GameTests(unittest.TestCase):
             g.available_move(0, 4, g.__player_1__)
         )
     def test_can_finish_checkers_p1(self):
-        """ Este test verifica que el método can_finish_checkers_p1() devuelve True solo cuando se cumple la condicion. """
+        """ Este test verifica que el método can_finish_checkers() devuelve True solo cuando se cumple la condicion. """
 
         g, c, q, col = self.setUp()
         for x in range(0, 18):
             col[x][q] = 0
-        self.assertTrue(g.can_finish_checkers_p1())
+        self.assertTrue(g.can_finish_checkers(g.__player_1__))
         g.prepare_board()
-        self.assertFalse(g.can_finish_checkers_p1())
+        self.assertFalse(g.can_finish_checkers(g.__player_1__))
     def test_can_finish_checkers_p2(self):
-        """ Este test verifica que el método can_finish_checkers_p2() devuelve True solo cuando se cumple la condicion. """
+        """ Este test verifica que el método can_finish_checkers() devuelve True solo cuando se cumple la condicion. """
         g, c, q, col = self.setUp()
         for x in range(6, 24):
             col[x][q] = 0
-        self.assertTrue(g.can_finish_checkers_p2())
+        self.assertTrue(g.can_finish_checkers(g.__player_2__))
         g.prepare_board()
-        self.assertFalse(g.can_finish_checkers_p2())
+        self.assertFalse(g.can_finish_checkers(g.__player_2__))
     def test_win_condition(self):
         """ Este test verifica que el método win_condition() devuelve True solo cuando se cumple la condicion de victoria para el jugador señalado. """
         g, c, q, col = self.setUp()
