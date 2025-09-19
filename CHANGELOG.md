@@ -1,10 +1,15 @@
 # Changelog
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog. 
-## [18/09/2025] commit 1
+## [19/09/2025]
+
+### Alterado
+- Usando pylint, se modifico el archivo game.py, para cumplir con los estandares. Todavia no esta completo.
+## [18/09/2025]
 
 ### Alterado
 - - Usando pylint, se modificaron los archivos board.py para llegar a un puntajen de 10/10.
+
 ## [17/09/2025] commit 3
 
 ### Alterado
