@@ -32,16 +32,21 @@ class CLI(cmd.Cmd):
         g: Game = self.__game__
         if winner == 'p1':
             self.winner_message(g.__player_1__)
-        elif winner == 'p2':
+            return
+        if winner == 'p2':
             self.winner_message(g.__player_2__)
+            return
         if c == 1:
             g.turn(g.__player_1__)
             winner = 'p1' if g.win_condition(g.__player_1__) else None
-            c = 2
-        elif c == 2:
+            self.__contador__ = 2
+            print(c)
+            return
+        if c == 2:
             g.turn(g.__player_2__)
             winner = 'p2' if g.win_condition(g.__player_2__) else None
-            c = 1
+            self.__contador__ = 1
+            return
     def winner_message(self, winner: Player):
         """Finaliza el juego si algun jugador gano."""
         print(f"Felicitaciones {winner.get_name()}!!!\nGanaste el juego =)\nEspero que lo hayas disfrutado, gracias por jugar!")

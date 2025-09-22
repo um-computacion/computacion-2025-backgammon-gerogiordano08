@@ -67,4 +67,65 @@ PROMPTS USADOS EN EL DESARROLLO
         print(" +---+---+---+---+---+---+  |   |  +---+---+---+---+---+---+")
         print("   1   2   3   4   5   6    |BAR|    7   8   9  10  11  12")
         - Uso: Le pedi al asistente integrado de github en VS Code que ingrese las coordenadas de cada lugar del tablero al tablero que tenia diseñado para imprimir. Decidio hacer otro método para esto. Saque de ese método la logica y la implementé en el método que ya existía. Fue utilizado en core/board.py. 
-        
+- ChatGPT 5:
+        - Input: 
+                "tengo un bucle for, que itera sobre una lista que contiene diccionarios. El bucle verifica si el diccionario x cumple determinada condicion y, si es asi, debe agregar el indice de ese diccionario a una lista. Para esto uso list.index(x). El problema es que este metodo me devuelve el indice de el primer diccionario que encuentre igual a x, no necesariamente sobre el que estoy iterando. De que otra forma puedo lograr esto?"
+        - Output:
+                "¡Exacto! Lo que notaste es totalmente cierto 👌.
+                🔎 Qué pasa con list.index(x)
+                list.index(x) siempre devuelve el índice de la primera coincidencia en la lista, no el de la iteración actual.
+                Como tus diccionarios pueden repetirse (o al menos compararse iguales), te devuelve siempre el primero.
+                ✅ La forma correcta: usar enumerate
+                enumerate te da tanto el índice como el elemento mientras iterás:
+                lista = [
+                {"a": 1, "b": 2},
+                {"a": 3, "b": 4},
+                {"a": 1, "b": 5},
+                ]
+
+                indices = []
+                for i, dic in enumerate(lista):
+                if dic["a"] == 1:   # condición de ejemplo
+                        indices.append(i)
+
+                print(indices)  # [0, 2]
+                De esta forma i es siempre el índice real del diccionario que estás recorriendo.
+                🔧 Si querés hacerlo en una sola línea (list comprehension):
+                indices = [i for i, dic in enumerate(lista) if dic["a"] == 1]
+                👉 Resumen: no uses .index(x) mientras iterás. Usá enumerate para tener siempre el índice actual.
+                ¿Querés que te muestre cómo aplicar esto directamente sobre tu caso del tablero de backgammon (las columnas con checker y quantity)?"
+        - Uso: La informacion que GPT me brindo fue implementada en un loop del metodo turn_normal() de la clase Game
+- ChatGPT 5:
+        - Input:
+                "Para un if, si tengo dos condiciones distintas que si se cumplen resultan en lo mismo, que puedo hacer en vez de usar or, ya que no quiero pasar los 100 caracteres por linea?"
+        - Output:
+                "¡Muy buena! 👌 El problema no es el or, sino que tu condición se hace larga y poco legible. Hay varias formas de mantener el código claro sin romper el límite de 100 caracteres por línea.
+                🔹 1. Usar paréntesis y dividir en varias líneas
+                Python permite dividir expresiones lógicas con () y saltos de línea:
+                if (
+                condicion_larga_1
+                or condicion_larga_2
+                ):
+                hacer_algo()
+                Esto es totalmente válido y PEP 8-friendly.
+                🔹 2. Guardar condiciones en variables con nombre claro
+                Así mejoras legibilidad y evitas repetir:
+                es_valido = condicion_larga_1 or condicion_larga_2
+                if es_valido:
+                hacer_algo()
+                🔹 3. Usar in cuando aplican varias opciones
+                En lugar de x == "a" or x == "b":
+                if x in ("a", "b"):
+                hacer_algo()
+                Esto es más corto y legible.
+                🔹 4. Factorizar en una función auxiliar
+                Si la lógica es muy repetitiva, la escondés detrás de una función descriptiva:
+                def es_jugada_valida(x):
+                return condicion_larga_1 or condicion_larga_2
+
+                if es_jugada_valida(jugada):
+                hacer_algo()
+                ✅ Resumiendo:
+                Usá paréntesis y salto de línea si solo es cuestión de ancho.
+                Si querés más legibilidad, factorizar en variables, sets o funciones auxiliares."
+        - Uso: La informacion me sirve y sera implementada para dejar codigo mas limpio.

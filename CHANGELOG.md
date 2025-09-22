@@ -2,10 +2,18 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog.
 
-## [22/09/2025]
+## [22/09/2025] commit 2
 
 ### Alterado
+
+- Se arreglaron errores de game.py
+
+## [22/09/2025] commit 1
+
+### Alterado
+
 - Se progresó en la corrección de game.py
+
 ## [19/09/2025]
 
 ### Alterado
