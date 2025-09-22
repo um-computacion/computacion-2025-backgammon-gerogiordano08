@@ -1,6 +1,11 @@
 # Changelog
 
-Todos los cambios notables del proyecto van a ser documentados en este changelog. 
+Todos los cambios notables del proyecto van a ser documentados en este changelog.
+
+## [22/09/2025]
+
+### Alterado
+- Se progresó en la corrección de game.py
 ## [19/09/2025]
 
 ### Alterado
