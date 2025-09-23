@@ -2,6 +2,12 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog.
 
+## [22/09/2025] commit 3
+
+### Alterado
+
+- Se continuo arreglando errores de game.py, el juego es casi completamente funcional, quedan pequeños errores que, de cualquier manera, no permiten que se pueda jugar correctamente.
+
 ## [22/09/2025] commit 2
 
 ### Alterado

@@ -40,7 +40,6 @@ class CLI(cmd.Cmd):
             g.turn(g.__player_1__)
             winner = 'p1' if g.win_condition(g.__player_1__) else None
             self.__contador__ = 2
-            print(c)
             return
         if c == 2:
             g.turn(g.__player_2__)
