@@ -53,15 +53,15 @@ class GameTests(unittest.TestCase):
         
         self.assertTrue(
             # de 'x' a 0
-            g.available_move(0, 2, g.__player_1__) and 
+            g.available_move(0, 2) and 
             # de 'x' a 'x'
-            g.available_move(0, 11, g.__player_1__)
+            g.available_move(0, 11)
         )
         self.assertFalse(
             # de 0 a 'x'
-            g.available_move(3, 11, g.__player_1__) and
+            g.available_move(3, 11) and
             # de 'x' a 'o'
-            g.available_move(0, 4, g.__player_1__)
+            g.available_move(0, 4)
         )
     def test_can_finish_checkers_p1(self):
         """ Este test verifica que el método can_finish_checkers() devuelve True solo cuando se cumple la condicion. """

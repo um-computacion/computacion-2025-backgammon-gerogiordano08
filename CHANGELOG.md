@@ -1,6 +1,36 @@
 # Changelog
 
-Todos los cambios notables del proyecto van a ser documentados en este changelog. 
+Todos los cambios notables del proyecto van a ser documentados en este changelog.
+
+## [25/09/2025]
+
+### Agregado
+
+- Tests para CLI.
+
+- Algunas funciones de la CLI, como advertencia al sobreescribir juego. 
+### Alterado
+
+- El juego ya es estable y se puede jugar normalmente. 
+
+## [22/09/2025] commit 3
+
+### Alterado
+
+- Se continuo arreglando errores de game.py, el juego es casi completamente funcional, quedan pequeños errores que, de cualquier manera, no permiten que se pueda jugar correctamente.
+
+## [22/09/2025] commit 2
+
+### Alterado
+
+- Se arreglaron errores de game.py
+
+## [22/09/2025] commit 1
+
+### Alterado
+
+- Se progresó en la corrección de game.py
+
 ## [19/09/2025]
 
 ### Alterado

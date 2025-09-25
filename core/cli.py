@@ -11,6 +11,13 @@ class CLI(cmd.Cmd):
 
     def do_start(self, line):
         """Comienza el juego"""
+        if self.__contador__ != 0:
+            while True:
+                i = input("Ya hay un juego en progreso. Estas seguro que quieres sobreescribirlo? (y/n)")
+                if i.lower() == 'n':
+                    return
+                elif i.lower() == 'y':
+                    break
         try:
             nombrej1 = str(input("Ingresa el nombre del jugador 1:\n"))
             nombrej2 = str(input("Ingresa el nombre del jugador 2:\n"))
@@ -24,24 +31,27 @@ class CLI(cmd.Cmd):
 
     def do_play(self, line):
         """Continua con el juego"""
+        g: Game = self.__game__
         winner = None
+        if g.win_condition(g.__player_1__):
+            winner = g.__player_1__
+        if g.win_condition(g.__player_2__):
+            winner = g.__player_2__
         c = self.__contador__
         if c == 0:
             print("Primero debes usar el comando 'start' para iniciar un nuevo juego!")
             return
-        g: Game = self.__game__
-        if winner == 'p1':
-            self.winner_message(g.__player_1__)
-        elif winner == 'p2':
-            self.winner_message(g.__player_2__)
+        if winner != None:
+            self.winner_message(winner)
+            return winner.get_name()
         if c == 1:
             g.turn(g.__player_1__)
-            winner = 'p1' if g.win_condition(g.__player_1__) else None
-            c = 2
-        elif c == 2:
+            self.__contador__ = 2
+            return
+        if c == 2:
             g.turn(g.__player_2__)
-            winner = 'p2' if g.win_condition(g.__player_2__) else None
-            c = 1
+            self.__contador__ = 1
+            return
     def winner_message(self, winner: Player):
         """Finaliza el juego si algun jugador gano."""
         print(f"Felicitaciones {winner.get_name()}!!!\nGanaste el juego =)\nEspero que lo hayas disfrutado, gracias por jugar!")
@@ -68,3 +78,11 @@ class CLI(cmd.Cmd):
                 }
         if line not in reglas: line = ""
         print(f"\n{reglas[line]}")
+    def get_game(self):
+        return self.__game__
+    def set_game(self, new_game:Game):
+        self.__game__ = new_game
+    def get_contador(self):
+        return self.__contador__
+    def set_contador(self, new_contador:int):
+        self.__contador__ = new_contador

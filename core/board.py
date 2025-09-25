@@ -4,14 +4,14 @@ class Board:
     todos los metodos necesarios para la actividad sobre este. Atributo: columnas (dict)."""
     def __init__(self):
 
-        self.__columnas__ = [{'checker' : 'x', 'quantity' : 9}, {'checker' : 'x', 'quantity' : 3},
-                             {'checker' : 'x', 'quantity' : 5}, {'checker' : '', 'quantity' : 0},
+        self.__columnas__ = [{'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
                              {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
                              {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
                              {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
                              {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
-                             {'checker' : 'o', 'quantity' : 3}, {'checker' : 'o', 'quantity' : 4},
-                             {'checker' : 'o', 'quantity' : 4}, {'checker' : '', 'quantity' : 0},
+                             {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
+                             {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
+                             {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
                              {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
                              {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
                              {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
