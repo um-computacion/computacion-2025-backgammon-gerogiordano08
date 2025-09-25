@@ -2,6 +2,17 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog.
 
+## [25/09/2025]
+
+### Agregado
+
+- Tests para CLI.
+
+- Algunas funciones de la CLI, como advertencia al sobreescribir juego. 
+### Alterado
+
+- El juego ya es estable y se puede jugar normalmente. 
+
 ## [22/09/2025] commit 3
 
 ### Alterado

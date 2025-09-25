@@ -61,9 +61,13 @@ class Game:
         else:
             print(f"Dado 1: {dice[0]}. \nDado 2: {dice[1]}. \n Tienes dobles!" )
         # Comienza loop que maneja cada movimiento disponible
-        for x in range(len(dice)):
+        has_checkers_in_bar = bool(self.__board__.get_columnas()[player.get_bar_index()]['quantity'] > 0)
+        loop_times = len(dice)
+        if has_checkers_in_bar:
+            bar_quan = self.__board__.get_columnas()[player.get_bar_index()]['quantity']
+            loop_times = bar_quan
+        for x in range(loop_times):
             successful_move = False
-            has_checkers_in_bar = bool(self.__board__.get_columnas()[player.get_bar_index()]['quantity'] > 0)
             while not successful_move:
                 self.__board__.show_board()
                 if has_checkers_in_bar:
@@ -81,7 +85,7 @@ class Game:
         fro = player.get_bar_practical_index()
         for i, d in enumerate(dice):
             to = fro + d if fro == 5 else fro - d
-            if self.available_move(fro, to):
+            if self.available_move(player.get_bar_index(), to):
                 available_dice.append(d)
         # Caso 1-1: no puede usar ninguno de los dados para
         # sacar fichas de la barra. Pierde el turno.
@@ -102,7 +106,7 @@ class Game:
             return False, None
         to: int = fro + used_die if fro == 5 else fro - used_die
         bo = self.__board__
-        if self.available_move(fro, to):
+        if self.available_move(player.get_bar_index(), to):
             if bo.get_columnas()[to]['checker'] == turn_player_checker:
                 bo.add_checker(to)
                 bo.remove_checker(player.get_bar_index())
@@ -129,17 +133,16 @@ class Game:
             print("No tienes fichas en esa posicion.")
             return False, None
         print("Dados disponibles:")
-        for x in dice:
-            print(f"Dado {dice.index(x)+1}: {x}")
+        for i, x in enumerate(dice):
+            print(f"Dado {i+1}: {x}")
         used_die: int = int(input("Que dado usaras? "
         "(ingresa la cantidad que muestra el dado)\n"))
         if used_die not in dice:
             print("Ese dado no esta disponible. ")
             return False, None
         to: int = fro + used_die if player.get_checker_type() == 1 else fro - used_die
-        finishing_move = bool(to > 23 or to < 0)
         # Caso 2-1: el jugador intenta sacar una ficha del tablero.
-        if finishing_move:
+        if to > 23 or to < 0:
             if self.finish_checker(fro, player):
                 print("Bien! Pudiste sacar la ficha del tablero.")
                 return True, used_die
@@ -199,7 +202,7 @@ class Game:
             c = self.__checker_1__
         else:
             c = self.__checker_2__
-        for x in range(0, 18):
+        for x in range(0, 24):
             if self.__board__.get_columnas()[x]['checker'] == c.get_symbol():
                 if self.__board__.get_columnas()[x]['quantity'] > 0:
                     return False
@@ -235,6 +238,8 @@ class Game:
     def get_board(self):
         """Devuelve el atributo board (objeto Board)."""
         return self.__board__
+    def set_board(self, new_board: Board):
+        self.__board__ = new_board
     def get_dice(self):
         """Devuelve el atributo dice (objeto Dice)."""
         return self.__dice__

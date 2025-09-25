@@ -13,7 +13,7 @@ class Board:
                              {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
                              {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
                              {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
-                             {'checker' : '', 'quantity' : 0}, {'checker' : 'b', 'quantity' : 3},
+                             {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
                              {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
                              {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
                              {'bar': True, 'checker' : 'x', 'quantity' : 0},
