@@ -27,8 +27,8 @@ class Board:
         print("           13  14  15  16  17  18   |BAR|   19  20  21  22  23  24")
         print("         +---+---+---+---+---+---+  |   |  +---+---+---+---+---+---+")
         for y in range(1, 6):
-            left = ' | '.join([f"{c(x,y)}" for x in range(12, 18, 1)])
-            right = ' | '.join([f"{c(x,y)}" for x in range(18, 24, 1)])
+            left = ' | '.join([f"{c(x,y)}" for x in range(12, 18)])
+            right = ' | '.join([f"{c(x,y)}" for x in range(18, 24)])
             bar_o = c(25, y)
             print(f"Fila {y}   | {left} |  | {bar_o} |  | {right} |")
         print("Fila 6   | v | v | v | v | v | v |  |   |  | v | v | v | v | v | v |")

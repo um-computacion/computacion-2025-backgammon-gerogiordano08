@@ -72,6 +72,8 @@ class Game:
                 self.__board__.show_board()
                 if has_checkers_in_bar:
                     successful_move, used_die = self.turn_fichas_barra(player, dice, turn_player_checker)
+                elif self.can_finish_checkers(player):
+                    successful_move, used_die = self.turn_finalizar_fichas(player, dice, turn_player_checker)
                 else:
                     successful_move, used_die = self.turn_normal(player, dice, turn_player_checker)
             dice.pop(dice.index(used_die)) if used_die != None else None
@@ -169,6 +171,36 @@ class Game:
             print("El movimiento no se puede completar! " \
             "Verifica que sea valido e intentalo de nuevo. ")
             return False, None
+    def turn_finalizar_fichas(self, player: Player, dice, turn_player_checker):
+        print("Para finalizar el recorrido de una ficha, debes sacar exactamente el numero que" \
+        " le falta en los dados, o uno mayor si ya sacaste esa ficha")
+        required_dice = []
+        r = range(18, 24) if player.get_checker_type() == 1 else range(5, -1, -1)
+        for i, x in enumerate(r):
+            if self.get_board().get_columnas()[x]['quantity'] > 0:
+                if x > 17:
+                    required_dice.append(6-i)
+                else:
+                    required_dice.append(6-i)
+        available_dice = []
+        for x in dice:
+            if x in required_dice:
+                available_dice.append(x)
+        if len(available_dice) == 0:
+            print("Mala suerte! No tienes ningun dado para usar.")
+            return True, None
+        print("Puedes usar los siguientes dados:")
+        for i, x in enumerate(dice):
+            print(f"Dado {i+1}: {x}")
+        used_die: int = int(input("Que dado usaras? (ingresa la cantidad " \
+        "que muestra el dado)\n"))
+        if used_die not in available_dice:
+            print("Ese dado no esta disponible. ")
+            return False, None
+        fro = 24 - used_die if player.get_checker_type() == 1 else used_die - 1
+        self.finish_checker(fro, player)
+
+
     def available_move(self, fro:int, to:int):
         """ Verifica que un movimiento sea válido segun las normas del juego. """
         columnas = self.__board__.get_columnas()
