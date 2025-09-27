@@ -2,6 +2,12 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog.
 
+## [27/09/2025]
+
+## Agregado
+- En la clase Game:
+    - Casi terminado el método turn_finalizar_fichas()
+
 ## [25/09/2025] commit 2
 
 ## Agregado

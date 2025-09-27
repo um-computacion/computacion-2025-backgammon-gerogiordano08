@@ -25,8 +25,8 @@ class CLI(cmd.Cmd):
             print("Ingresaste un nombre no valido. Intenta de nuevo.")
             return
         self.__game__ = Game(nombrej1, nombrej2)
-        self.__game__.prepare_board()
-        self.__contador__ = 1
+        self.__game__.prepare_final()
+        self.__contador__ = 2
         print("El juego fue iniciado con exito!")
 
     def do_play(self, line):
