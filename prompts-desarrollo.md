@@ -1,4 +1,5 @@
 PROMPTS USADOS EN EL DESARROLLO
+Todos los prompts de ChatGPT fueron hechos en el mismo chat, por lo que ya tenian contexto, por ejemplo, del lenguaje que he estado usando
 - ChatGPT 5:
         -Input: "me podrías proporcionar el dibujo de una tabla de backgammon hecha con caracteres de teclado, que pueda imprimir en una consola?"
         -Output: 
@@ -129,3 +130,35 @@ PROMPTS USADOS EN EL DESARROLLO
                 Usá paréntesis y salto de línea si solo es cuestión de ancho.
                 Si querés más legibilidad, factorizar en variables, sets o funciones auxiliares."
         - Uso: La informacion me sirve y sera implementada para dejar codigo mas limpio.
+- ChatGPT 5:
+        - Input: 
+                "como puedo remover varios indices de una lista de otra?"
+        - Output:
+                "Muy buena 👌. Tenés varias formas de hacerlo en Python. La idea es: tenés una lista L y otra lista indices con las posiciones a eliminar.
+                🔹 1. Con list comprehension (lo más limpio)
+                L = ["a", "b", "c", "d", "e"]
+                indices = [1, 3]   # quiero borrar posiciones 1 y 3 → "b" y "d"
+
+                result = [x for i, x in enumerate(L) if i not in indices]
+                print(result)  # ['a', 'c', 'e']
+                🔹 2. Eliminando en orden inverso
+                Si sí o sí querés modificar la lista original, borrá desde el índice más grande hacia abajo (para que no cambien las posiciones de los que faltan):
+                L = ["a", "b", "c", "d", "e"]
+                indices = [1, 3]
+
+                for i in sorted(indices, reverse=True):
+                L.pop(i)
+
+                print(L)  # ['a', 'c', 'e']
+                🔹 3. Usando numpy (si trabajás con arrays numéricos)
+                import numpy as np
+
+                arr = np.array([10, 20, 30, 40, 50])
+                indices = [1, 3]
+
+                result = np.delete(arr, indices)
+                print(result)  # [10 30 50]
+                ✅ En general, si lo que querés es construir una nueva lista filtrada, la opción con list comprehension (1) es la más clara y Pythonic.
+                Si necesitás modificar la lista en el lugar, usá la opción (2) borrando en orden inverso.
+                👉 ¿Querés que te arme un ejemplo aplicado directamente a tu caso del backgammon, donde required_dice tiene que eliminar varias posiciones a la vez?"
+        - Uso: Use la segunda sugerencia, en el metodo turn_finalizar_fichas() en game.py

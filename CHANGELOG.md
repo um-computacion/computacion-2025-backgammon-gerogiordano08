@@ -2,7 +2,25 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog.
 
-## [25/09/2025]
+## [27/09/2025] commit 2
+
+## Agregado
+- En la clase Game:
+    - Terminado el método turn_finalizar_fichas()
+- Se termino el desarrollo de la logica del juego. Falta formatear y algunos detalles, pero actualmente el juego backgammon funciona correctamente respentando las reglas del juego
+## [27/09/2025] commit 1
+
+## Agregado
+- En la clase Game:
+    - Casi terminado el método turn_finalizar_fichas()
+
+## [25/09/2025] commit 2
+
+## Agregado
+- En la clase Game:
+    - Se escribio un draft del método turn_finalizar_fichas() para manejar la logica de finalizacion de fichas con datos correspondientes.
+    
+## [25/09/2025] commit 1
 
 ### Agregado
 

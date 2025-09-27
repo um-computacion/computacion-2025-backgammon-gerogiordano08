@@ -47,6 +47,9 @@ class GameTests(unittest.TestCase):
         g.roll_dice()
         for x in g.get_dice().get_dice_results():
             self.assertIn(x, (1, 2, 3, 4, 5, 6))
+    def test_turn_finalizar_fichas(self):
+        g, c, q, col = self.setUp()
+        g.get_board().clear_board()
     def test_available_move(self):
         """ Verifica que available_move(fro, to) devuelve True para las condiciones suficientes y False para las condiciones insuficientes. """
         g = self.setUp()[0]
