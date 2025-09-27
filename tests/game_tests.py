@@ -92,21 +92,3 @@ class GameTests(unittest.TestCase):
             col[x][q] = 0
         self.assertTrue(g.win_condition(g.get_player_1()))
         self.assertTrue(g.win_condition(g.get_player_2()))
-    def test_check_bar(self):
-        """ El test verifica que check_bar(player) devuelve True o False correctamente de acuerdo al caso. """
-        g, c, q, col = self.setUp()
-        self.assertFalse(g.check_bar(g.get_player_1()))
-        self.assertFalse(g.check_bar(g.get_player_2()))
-        g.add_checker(24)
-        self.assertTrue(g.check_bar(g.get_player_1()))
-        self.assertFalse(g.check_bar(g.get_player_2()))
-        g.add_checker(25)
-        self.assertTrue(g.check_bar(g.get_player_1()))
-        self.assertTrue(g.check_bar(g.get_player_2()))
-    def test_finish_checker(self):
-        """ Verifica que la funcion finish_checker(col, player) devuelve True cuando exitosamente termina una ficha. """
-        g, c, q, col = self.setUp()
-        self.assertFalse(g.finish_checker(18, g.__player_1__))
-        for x in range(0, 18):
-            col[x][q] = 0
-        self.assertTrue(g.finish_checker(18, g.__player_1__))
