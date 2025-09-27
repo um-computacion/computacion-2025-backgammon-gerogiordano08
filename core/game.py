@@ -36,15 +36,15 @@ class Game:
         c1 = self.__checker_1__.get_symbol()
         c2 = self.__checker_2__.get_symbol()
         put(19, c1, 2)
-        put(20, c1, 2)
+
         put(21, c1, 2)
-        put(22, c1, 2)
+
         put(23, c1, 2)
         
         put(0, c2, 2)
-        put(1, c2, 2)
+
         put(2, c2, 2)
-        put(3, c2, 2)
+
         put(4, c2, 2)
 
     def move_checker(self, fro, to):
@@ -192,18 +192,23 @@ class Game:
         print("Para finalizar el recorrido de una ficha, debes sacar exactamente el numero que" \
         " le falta en los dados, o uno mayor si ya sacaste esa ficha")
         required_dice = [1, 2, 3, 4, 5, 6]
+        list_pop = []
         if player.get_checker_type() == 1:
             for i, x in enumerate(range(23, 19, -1)):
                 if (self.get_board().get_columnas()[x]['quantity'] == 0):
-                    required_dice.pop(i)
+                    list_pop.append(i)
                 if (self.get_board().get_columnas()[x]['quantity'] > 0):
                     break
+        if player.get_checker_type() == 2:
             for i, x in enumerate(range(0, 6)):
                 if (self.get_board().get_columnas()[x]['quantity'] == 0):
-                    required_dice.pop(i)
+                    list_pop.append(i)
+
                 if (self.get_board().get_columnas()[x]['quantity'] > 0):
                     break
 
+        for i in sorted(list_pop, reverse=True):
+            required_dice.pop(i)
         available_dice = []
 
         for x in dice:
@@ -242,21 +247,26 @@ class Game:
             print("Bien! Pudiste sacar la ficha!")
             self.finish_checker(fro, player)
             return True, used_die
-        if (player.get_checker_type() == 1 and
-            fro != 18 and
-            self.get_board().get_columnas()[fro - 1]['quantity'] == 0 and
-            fro + used_die > 24):
-            self.finish_checker(fro, player)
-            return True, used_die
-        if (player.get_checker_type() == 2 and
-            fro != 5 and
-            self.get_board().get_columnas()[fro + 1]['quantity'] == 0 and
-            fro - used_die < -1):
-            self.finish_checker(fro, player)
-            return True, used_die
+        if player.get_checker_type() == 1:
+            for x in range(1, 6):
+                if (fro != 18 and
+                    self.get_board().get_columnas()[fro - x]['quantity'] == 0 and
+                    fro + used_die - x == 24):
+                    self.finish_checker(fro, player)
+                    return True, used_die
+                if self.get_board().get_columnas()[fro - x]['quantity'] != 0:
+                    break
+        if player.get_checker_type() == 2:
+            for x in range(1, 6):
+                if (fro != 5 and
+                    self.get_board().get_columnas()[fro + x]['quantity'] == 0 and
+                    fro - used_die + x == -1):
+                    self.finish_checker(fro, player)
+                    return True, used_die
+                if self.get_board().get_columnas()[fro + x]['quantity'] != 0:
+                    break
         if (player.get_checker_type() == 1 and fro + used_die != 24 or
             player.get_checker_type() == 2 and fro - used_die != -1):
-            print(player.get_checker_type(), fro-used_die)
             print("El movimiento no se puede completar! " \
             "Verifica que sea valido e intentalo de nuevo")
 
