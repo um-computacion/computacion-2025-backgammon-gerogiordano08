@@ -15,7 +15,7 @@ class CLITests(unittest.TestCase):
         b.put_checker(1, 'o')
         ng.set_board(b)
         cli.set_game(ng)
-        self.assertEqual(cli.do_play(self), 'a')
+        self.assertEqual(cli.do_play(), 'a')
     def test_do_play_winner_p2(self):
         cli = self.setUp()
         ng = Game('a', 'b')
@@ -23,4 +23,4 @@ class CLITests(unittest.TestCase):
         b.put_checker(1, 'x')
         ng.set_board(b)
         cli.set_game(ng)
-        self.assertEqual(cli.do_play(self), 'b')
+        self.assertEqual(cli.do_play(), 'b')
