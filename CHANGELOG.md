@@ -2,6 +2,16 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog.
 
+## [01/10/2025]
+
+### Agregado
+
+- Terminados los test de clase Game.
+
+### Alterado
+
+- cli.py puntuacion pylint 10/10
+
 ## [27/09/2025] commit 2
 
 ## Agregado
