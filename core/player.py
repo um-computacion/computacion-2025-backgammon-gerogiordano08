@@ -17,7 +17,7 @@ class Player:
         """Devuelve el indice de la barra del jugador en 
         el atributo columnas de Board (int: 24 o 25)."""
         return self.__bar_index__
-    def get_opp_bar_index(self):
+    def get_bar_opp_index(self):
         """Devuelve el indice de la barra del jugador opuesto en
         el atributo columnas de Board (int: 24 o 25)."""
         if self.__bar_index__ == 24:

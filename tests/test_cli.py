@@ -1,77 +1,94 @@
-"""Modulo CLI. Define la clase CLI."""
-import cmd
+from core.cli import CLI
 from core.game import Game
-from core.player import Player
-class CLI(cmd.Cmd):
-    """Definicion de la logica de CLI, que se encarga de darle al usuario una interfaz de 
-    comandos para el desarrollo del juego. Incluye los atributos game (Game) y contador (int)."""
-    intro = 'Bienvenido a Backgammon por Gerónimo Giordano. Escribe \'ayuda\' para ver los' \
-    ' comandos disponibles, \'reglas\' para ver las reglas del juego. Cuando estes listo, ingresa' \
-    ' \'start\' para iniciar el juego.'
-    prompt = '(backgammon) >>> '
-    def __init__(self):
-        super().__init__()
-        self.__game__ = Game('','')
-        self.__contador__ = 0
+from core.board import Board
+import unittest
+from unittest.mock import Mock, patch, call
+class CLITests(unittest.TestCase):
+    def setUp(self):
+        self.cli = CLI()
 
-    def do_start(self):
-        """Comienza el juego."""
-        if self.__contador__ != 0:
-            while True:
-                i = input("Ya hay un juego en progreso. " \
-                "Estas seguro que quieres sobreescribirlo? (y/n)")
-                if i.lower() == 'n':
-                    return
-                if i.lower() == 'y':
-                    break
-        nombrej1 = str(input("Ingresa el nombre del jugador 1:\n"))
-        nombrej2 = str(input("Ingresa el nombre del jugador 2:\n"))
-        self.__game__ = Game(nombrej1, nombrej2)
-        self.__game__.prepare_board()
-        self.__contador__ = 1
-        print("El juego fue iniciado con exito!")
+    @patch("builtins.print")
+    @patch("builtins.input", side_effect=SystemExit)
+    def test_do_start_prints(self, mock_print, mock_input):
+        """Testea que la funcion muestre las indicaciones correctas en la consola"""
+        with self.assertRaises(SystemExit):
+            self.cli.do_start()
+        mock_print.assert_any_call("Ingresa el nombre del jugador 1:\n")
+        self.cli.set_contador(1)
+        with self.assertRaises(SystemExit):
+            self.cli.do_start()
+        mock_print.assert_any_call("Ya hay un juego en progreso. Estas seguro que quieres sobreescribirlo? (y/n)")
+    
+    @patch('builtins.input', side_effect=['a', 'b'])
+    def test_do_start(self, mock_input):
+        """Testea que la funcion inicie correctamente el juego."""
+        self.cli.do_start()
+        self.assertEqual(self.cli.get_game().get_player_1().get_name(), 'a')
+        self.assertEqual(self.cli.get_game().get_player_2().get_name(), 'b')
+        self.assertEqual(self.cli.get_contador(), 1)
 
-    def do_play(self):
-        """Continua con el juego"""
-        g: Game = self.__game__
-        winner = None
-        if g.win_condition(g.__player_1__):
-            winner = g.__player_1__
-        if g.win_condition(g.__player_2__):
-            winner = g.__player_2__
-        c = self.__contador__
-        if c == 0:
-            print("Primero debes usar el comando 'start' para iniciar un nuevo juego!")
-            return
-        if winner is not None:
-            self.winner_message(winner)
-            return
-        if c == 1:
-            g.turn(g.__player_1__)
-            self.__contador__ = 2
-            return
-        if c == 2:
-            g.turn(g.__player_2__)
-            self.__contador__ = 1
-            return
-    def winner_message(self, winner: Player):
-        """Finaliza el juego si algun jugador gano."""
-        print(f"Felicitaciones {winner.get_name()}!!!\nGanaste el juego =)\nEspero que lo hayas " \
-              "disfrutado, gracias por jugar!")
-        self.__contador__ = 0
+    @patch('builtins.print')
+    def test_do_play_no_hay_juego(self, mock_print):
+        self.cli.set_contador(0)
+        self.cli.do_play()
+        mock_print.assert_any_call("Primero debes usar el comando 'start' para iniciar un nuevo juego!")
 
-    def do_salir(self):
-        """Cierra el programa."""
-        print("Gracias por jugar!")
-        return True
-    def do_ayuda(self):
-        """Muestra los comandos disponibles para ejecutar."""
-        print(f"salir -> {self.do_salir.__doc__}")
-        print(f"reglas -> {self.do_reglas.__doc__}")
-        print(f"start -> {self.do_start.__doc__}")
-        print(f"play -> {self.do_play.__doc__}")
-    def do_reglas(self, line):
-        """Muestra las reglas del juego."""
+    @patch("builtins.print")
+    def test_do_play_winner_p1(self,mock_print):
+        self.cli.set_contador(1)
+        ng = Game('a', 'b')
+        b = Board()
+        b.put_checker(1, 'o')
+        b.show_board()
+        ng.set_board(b)
+        self.cli.set_game(ng)
+        self.cli.do_play()
+        mock_print.assert_any_call("Felicitaciones a!!!\nGanaste el juego =)\nEspero que lo hayas disfrutado, gracias por jugar!")
+    @patch("builtins.print")
+    def test_do_play_winner_p2(self,mock_print):
+        self.cli.set_contador(1)
+        ng = Game('a', 'b')
+        b = Board()
+        b.put_checker(22, 'x')
+        ng.set_board(b)
+        self.cli.set_game(ng)
+        self.cli.do_play()
+        mock_print.assert_any_call("Felicitaciones b!!!\nGanaste el juego =)\nEspero que lo hayas disfrutado, gracias por jugar!")
+
+    @patch('builtins.input', side_effect=['a', 'b'])
+    @patch("core.cli.Game.turn")
+    def test_do_play_to_turn_p1(self, mock_turn, mock_input):
+        self.cli.do_start()
+        self.cli.do_play()
+        mock_turn.assert_called_once()
+
+    @patch('builtins.input', side_effect=['a', 'b'])
+    @patch("core.cli.Game.turn")
+    def test_do_play_to_turn_p2(self, mock_turn, mock_input):
+        self.cli.do_start()
+        self.cli.set_contador(2)
+        self.cli.do_play()
+        mock_turn.assert_called_once()
+    @patch("builtins.print")
+    @patch('builtins.input', side_effect=['a', 'b'])
+    def test_winner_message(self, mock_input, mock_print):
+        self.cli.do_start()
+        self.cli.winner_message(self.cli.get_game().get_player_1())
+        mock_print.assert_any_call("Felicitaciones a!!!\nGanaste el juego =)\nEspero que lo hayas disfrutado, gracias por jugar!")
+
+    def test_do_salir(self):
+        self.assertTrue(self.cli.do_salir())
+    @patch('builtins.print')
+    def test_do_ayuda(self, mock_input):
+        self.cli.do_ayuda()
+        calls = (call(f"salir -> {self.cli.do_salir.__doc__}"),
+                 call(f"reglas -> {self.cli.do_reglas.__doc__}"),
+                 call(f"start -> {self.cli.do_start.__doc__}"),
+                 call(f"play -> {self.cli.do_play.__doc__}"))
+        mock_input.assert_has_calls(calls)
+
+    @patch('builtins.print')
+    def test_do_reglas(self, mock_print):
         reglas = {"tablero": "En el backgammon se enfrentan dos jugadores. Cada uno de ellos " \
                 "utiliza 15 fichas, blancas y negras respectivamente, que se distribuyen sobre un "
                 "tablero con 24 casillas triangulares.\n\nLos dos jugadores avanzan sus fichas "
@@ -126,18 +143,7 @@ class CLI(cmd.Cmd):
                 "\nPor ejemplo >>> reglas tablero\nLos temas disponibles son: tablero, mover "
                 "fichas, capturar, completar recorrido, final."
                 }
-        if line not in reglas:
-            line = ""
-        print(f"\n{reglas[line]}")
-    def get_game(self):
-        """Devuelve el atributo game (objeto Game)"""
-        return self.__game__
-    def set_game(self, new_game:Game):
-        """Define el atributo game (objeto Game)"""
-        self.__game__ = new_game
-    def get_contador(self):
-        """Devuelve el atributo contador (int)"""
-        return self.__contador__
-    def set_contador(self, new_contador:int):
-        """Define el atributo contador"""
-        self.__contador__ = new_contador
+        for x, y in reglas.items():
+            self.cli.do_reglas(x)
+            mock_print.assert_any_call(f'\n{y}')
+    

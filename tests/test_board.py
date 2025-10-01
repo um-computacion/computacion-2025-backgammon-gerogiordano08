@@ -72,6 +72,7 @@ class BoardTests(unittest.TestCase):
     def test_clear_board(self):
         """ Este test verifica que al usar clear_board() el tablero queda limpio. """
         tab = Board()
+        tab.put_checker(1, 'x')
         self.assertFalse(
         all(
         column['quantity'] == 0
