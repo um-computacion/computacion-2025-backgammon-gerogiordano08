@@ -125,7 +125,7 @@ class Game:
             else:
                 bo.put_checker(to, turn_player_checker)
                 bo.remove_checker(player.get_bar_index())
-                bo.add_checker(player.get_opp_bar_index())
+                bo.add_checker(player.get_bar_opp_index())
             return True, used_die
         print("El movimiento no se puede completar! " \
         "Verifica que sea valido e intentalo de nuevo. ")
@@ -166,7 +166,7 @@ class Game:
             else:
                 bo.put_checker(to, turn_player_checker)
                 bo.remove_checker(fro)
-                bo.add_checker(player.get_opp_bar_index())
+                bo.add_checker(player.get_bar_opp_index())
             return True, used_die
 
         print("El movimiento no se puede completar! " \
