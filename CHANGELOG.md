@@ -2,7 +2,12 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog.
 
-## [02/10/2025]
+## [02/10/2025] commit 2
+
+### Agregado
+
+- Se se agrego a cada clase que dependia de redis un parametro 'testing' que no usa la base de datos, porque se producian errores con los tests.
+## [02/10/2025] commit 1
 
 ### Agregado
 

@@ -1,10 +1,9 @@
 from core.board import Board
 import unittest
-from core.redis_store import RedisStore
 from unittest.mock import patch, call
 class BoardTests(unittest.TestCase):
     def setUp(self):
-        self.tab = Board()
+        self.tab = Board(testing=True)
 
     @patch('builtins.print')
     def test_show_board(self, mock_print):

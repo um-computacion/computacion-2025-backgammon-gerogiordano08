@@ -4,10 +4,10 @@ from core.redis_store import RedisStore
 class Player:
     """La clase player define a cada uno de los dos jugadores
     junto con sus responsabilidades. Atributos: name, checker_type, bar_index"""
-    def __init__(self, name:str, checker_type:int):
+    def __init__(self, name:str, checker_type:int, testing:bool = False):
         self.__redis_store__ = RedisStore()
         self.__checker_type__ = checker_type
-        if not self.__redis_store__.get_value(f'name{checker_type}'):
+        if not self.__redis_store__.get_value(f'name{checker_type}') or testing:
             self.__name__ = name
         else:
             self.__name__ = self.__redis_store__.get_value(f'name{checker_type}')

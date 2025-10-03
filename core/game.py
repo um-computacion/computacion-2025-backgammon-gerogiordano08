@@ -7,13 +7,21 @@ from core.board import Board
 class Game:
     """La clase Game define la logica del juego. Atributos: board (Board), dice (Dice),
     checker_1 (Checker), checker_2 (Checker), player_1 (Player), player_2 (Player)."""
-    def __init__(self, p1_name, p2_name):
+    def __init__(self, p1_name, p2_name, testing: bool = False):
+
         self.__board__ = Board()
         self.__dice__ = Dice()
         self.__checker_1__ = Checker(1)
         self.__checker_2__ = Checker(2)
         self.__player_1__ = Player(p1_name, 1)
         self.__player_2__ = Player(p2_name, 2)
+        if testing:
+            self.__board__ = Board(testing=True)
+            self.__dice__ = Dice()
+            self.__checker_1__ = Checker(1)
+            self.__checker_2__ = Checker(2)
+            self.__player_1__ = Player(p1_name, 1, testing=True)
+            self.__player_2__ = Player(p2_name, 2, testing=True)
     def prepare_board(self) -> None:
         """ Este método deja el tablero listo para el juego,
         dejando las 30 fichas en sus lugares correspondientes. """

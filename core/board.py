@@ -3,9 +3,9 @@ from core.redis_store import RedisStore
 class Board:
     """La clase Board define la lógica del tablero junto con
     todos los metodos necesarios para la actividad sobre este. Atributo: columnas (dict)."""
-    def __init__(self):
+    def __init__(self, testing:bool = False):
         self.__redis_store__ = RedisStore()
-        if not self.__redis_store__.get_value('columnas'):
+        if not self.__redis_store__.get_value('columnas') or testing:
             self.__columnas__ = [{'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
                                 {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
                                 {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},

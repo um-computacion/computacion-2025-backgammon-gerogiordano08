@@ -10,14 +10,18 @@ class CLI(cmd.Cmd):
     ' comandos disponibles, \'reglas\' para ver las reglas del juego. Cuando estes listo, ingresa' \
     ' \'start\' para iniciar el juego.'
     prompt = '(backgammon) >>> '
-    def __init__(self):
+    def __init__(self, testing:bool = False):
         super().__init__()
+        self.is_testing = testing
         self.__redis_store__ = RedisStore()
         self.__game__ = Game('','')
-        if self.__redis_store__.get_value('contador') is None:
+        if self.__redis_store__.get_value('contador') is None or testing:
             self.__contador__ = 0
         else:
             self.__contador__ = int(self.__redis_store__.get_value('contador'))
+        if testing:
+            self.__game__ = Game('','', testing=True)
+
 
     def do_start(self, line):
         """Comienza el juego."""
@@ -32,7 +36,10 @@ class CLI(cmd.Cmd):
         self.__redis_store__.delete_db()
         nombrej1 = str(input("Ingresa el nombre del jugador 1:\n"))
         nombrej2 = str(input("Ingresa el nombre del jugador 2:\n"))
-        self.__game__ = Game(nombrej1, nombrej2)
+        self.__game__ = Game(nombrej1, nombrej2, testing=True)
+        if self.is_testing:
+            self.__game__ = Game(nombrej1, nombrej2, testing=True)
+
         self.__game__.prepare_board()
         self.__contador__ = 1
         print("El juego fue iniciado con exito!")

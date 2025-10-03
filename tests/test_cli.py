@@ -1,12 +1,12 @@
 from core.cli import CLI
 from core.game import Game
 from core.board import Board
-import unittest
-from unittest.mock import Mock, patch, call
 from core.redis_store import RedisStore
+import unittest
+from unittest.mock import patch, call
 class CLITests(unittest.TestCase):
     def setUp(self):
-        self.cli = CLI()
+        self.cli = CLI(testing=True)
         self.redis_store = RedisStore()
         self.redis_store.delete_db()
 
@@ -39,8 +39,8 @@ class CLITests(unittest.TestCase):
     @patch("builtins.print")
     def test_do_play_winner_p1(self,mock_print):
         self.cli.set_contador(1)
-        ng = Game('a', 'b')
-        b = Board()
+        ng = Game('a', 'b', testing=True)
+        b = Board(testing=True)
         b.put_checker(1, 'o')
         b.show_board()
         ng.set_board(b)
@@ -50,8 +50,8 @@ class CLITests(unittest.TestCase):
     @patch("builtins.print")
     def test_do_play_winner_p2(self,mock_print):
         self.cli.set_contador(1)
-        ng = Game('a', 'b')
-        b = Board()
+        ng = Game('a', 'b', testing=True)
+        b = Board(testing=True)
         b.put_checker(22, 'x')
         ng.set_board(b)
         self.cli.set_game(ng)
