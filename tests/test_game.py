@@ -1,9 +1,9 @@
 from core.game import Game
 import unittest
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 class GameTests(unittest.TestCase):
     def setUp(self):
-        self.game = Game('a', 'b')
+        self.game = Game('a', 'b', testing=True)
         self.game.prepare_board()
         self.c = 'checker'
         self.q = 'quantity'

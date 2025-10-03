@@ -1,23 +1,27 @@
 """Modulo Board. Contiene la definicion de la clase Board."""
+from core.redis_store import RedisStore
 class Board:
     """La clase Board define la lógica del tablero junto con
     todos los metodos necesarios para la actividad sobre este. Atributo: columnas (dict)."""
-    def __init__(self):
-
-        self.__columnas__ = [{'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
-                             {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
-                             {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
-                             {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
-                             {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
-                             {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
-                             {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
-                             {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
-                             {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
-                             {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
-                             {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
-                             {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
-                             {'bar': True, 'checker' : 'x', 'quantity' : 0},
-                             {'bar': True, 'checker' : 'o', 'quantity' : 0}]
+    def __init__(self, testing:bool = False):
+        self.__redis_store__ = RedisStore()
+        if not self.__redis_store__.get_value('columnas') or testing:
+            self.__columnas__ = [{'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
+                                {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
+                                {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
+                                {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
+                                {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
+                                {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
+                                {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
+                                {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
+                                {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
+                                {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
+                                {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
+                                {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
+                                {'bar': True, 'checker' : 'x', 'quantity' : 0},
+                                {'bar': True, 'checker' : 'o', 'quantity' : 0}]
+        else:
+            self.__columnas__ = self.__redis_store__.load_list('columnas')
     def show_board(self):
         """ Este método imprime el tablero, poniendo el método checker(column, level)
         con las respectivas coordenadas en cada espacio ocupable por fichas del tablero."""

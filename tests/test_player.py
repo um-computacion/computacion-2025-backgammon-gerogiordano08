@@ -1,10 +1,9 @@
 from core.player import Player
 import unittest
-from unittest.mock import Mock, patch
 class PlayerTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.p1 = Player('a', 1)
-        self.p2 = Player('a', 2)
+        self.p1 = Player('a', 1, testing=True)
+        self.p2 = Player('a', 2, testing=True)
     def test_get_opp_bar_index(self):
         self.assertEqual(self.p1.get_bar_opp_index(), 25)
         self.assertEqual(self.p2.get_bar_opp_index(), 24)
