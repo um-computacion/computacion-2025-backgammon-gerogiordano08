@@ -2,6 +2,7 @@
 import cmd
 from core.game import Game
 from core.player import Player
+from core.redis_store import RedisStore
 class CLI(cmd.Cmd):
     """Definicion de la logica de CLI, que se encarga de darle al usuario una interfaz de 
     comandos para el desarrollo del juego. Incluye los atributos game (Game) y contador (int)."""
@@ -11,10 +12,14 @@ class CLI(cmd.Cmd):
     prompt = '(backgammon) >>> '
     def __init__(self):
         super().__init__()
+        self.__redis_store__ = RedisStore()
         self.__game__ = Game('','')
-        self.__contador__ = 0
+        if self.__redis_store__.get_value('contador') is None:
+            self.__contador__ = 0
+        else:
+            self.__contador__ = int(self.__redis_store__.get_value('contador'))
 
-    def do_start(self):
+    def do_start(self, line):
         """Comienza el juego."""
         if self.__contador__ != 0:
             while True:
@@ -24,6 +29,7 @@ class CLI(cmd.Cmd):
                     return
                 if i.lower() == 'y':
                     break
+        self.__redis_store__.delete_db()
         nombrej1 = str(input("Ingresa el nombre del jugador 1:\n"))
         nombrej2 = str(input("Ingresa el nombre del jugador 2:\n"))
         self.__game__ = Game(nombrej1, nombrej2)
@@ -31,7 +37,7 @@ class CLI(cmd.Cmd):
         self.__contador__ = 1
         print("El juego fue iniciado con exito!")
 
-    def do_play(self):
+    def do_play(self, line):
         """Continua con el juego"""
         g: Game = self.__game__
         winner = None
@@ -49,10 +55,12 @@ class CLI(cmd.Cmd):
         if c == 1:
             g.turn(g.__player_1__)
             self.__contador__ = 2
+            self.save_game()
             return
         if c == 2:
             g.turn(g.__player_2__)
             self.__contador__ = 1
+            self.save_game()
             return
     def winner_message(self, winner: Player):
         """Finaliza el juego si algun jugador gano."""
@@ -60,11 +68,11 @@ class CLI(cmd.Cmd):
               "disfrutado, gracias por jugar!")
         self.__contador__ = 0
 
-    def do_salir(self):
+    def do_salir(self, line):
         """Cierra el programa."""
         print("Gracias por jugar!")
         return True
-    def do_ayuda(self):
+    def do_ayuda(self, line):
         """Muestra los comandos disponibles para ejecutar."""
         print(f"salir -> {self.do_salir.__doc__}")
         print(f"reglas -> {self.do_reglas.__doc__}")
@@ -129,6 +137,13 @@ class CLI(cmd.Cmd):
         if line not in reglas:
             line = ""
         print(f"\n{reglas[line]}")
+    def save_game(self):
+        """Guarda el juego en la base de datos de redis."""
+        self.__redis_store__.save_list_to_json('columnas', self.__game__.get_board().get_columnas())
+        self.__redis_store__.set_value('contador', self.__contador__)
+        self.__redis_store__.set_value('name1', self.__game__.get_player_1().get_name())
+        self.__redis_store__.set_value('name2', self.__game__.get_player_2().get_name())
+        print("----- Juego guardado -----")
     def get_game(self):
         """Devuelve el atributo game (objeto Game)"""
         return self.__game__
@@ -141,3 +156,4 @@ class CLI(cmd.Cmd):
     def set_contador(self, new_contador:int):
         """Define el atributo contador"""
         self.__contador__ = new_contador
+        

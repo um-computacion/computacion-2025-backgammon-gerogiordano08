@@ -2,6 +2,12 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog.
 
+## [02/10/2025]
+
+### Agregado
+
+- Guardado de partida con redis. Funciona correctamente.
+
 ## [01/10/2025]
 
 ### Agregado
