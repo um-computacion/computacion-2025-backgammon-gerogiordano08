@@ -3,6 +3,7 @@ import cmd
 from core.game import Game
 from core.player import Player
 from core.redis_store import RedisStore
+from core.exceptions import InputError
 class CLI(cmd.Cmd):
     """Definicion de la logica de CLI, que se encarga de darle al usuario una interfaz de 
     comandos para el desarrollo del juego. Incluye los atributos game (Game) y contador (int)."""
@@ -15,12 +16,16 @@ class CLI(cmd.Cmd):
         self.is_testing = testing
         self.__redis_store__ = RedisStore()
         self.__game__ = Game('','')
-        if self.__redis_store__.get_value('contador') is None or testing:
-            self.__contador__ = 0
-        else:
-            self.__contador__ = int(self.__redis_store__.get_value('contador'))
         if testing:
+            self.__contador__ = 0
             self.__game__ = Game('','', testing=True)
+
+        else:
+            try:
+                self.__contador__ = int(self.__redis_store__.get_value('contador'))
+            except (TypeError, ValueError):
+                self.__contador__ = 0
+
 
 
     def do_start(self, line):
@@ -60,12 +65,18 @@ class CLI(cmd.Cmd):
             self.winner_message(winner)
             return
         if c == 1:
-            g.turn(g.__player_1__)
+            try:
+                g.turn(g.__player_1__)
+            except InputError as e:
+                print(e)
             self.__contador__ = 2
             self.save_game()
             return
         if c == 2:
-            g.turn(g.__player_2__)
+            try:
+                g.turn(g.__player_2__)
+            except InputError as e:
+                print(e)
             self.__contador__ = 1
             self.save_game()
             return

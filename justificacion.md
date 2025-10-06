@@ -13,6 +13,10 @@ Dice también es interesante porque simula un par de dados, además cumpliendo l
 ### Game  
 La clase Game maneja la lógica del juego, incluido el método turn y además todos los métodos que verifican condiciones que se deben ir cumpliendo o no para lograr determinadas acciones. Como atributo tiene objetos de todas las clases anteriormente mencionadas. __board__: Board, __dice__: Dice, __checker_1__: Checker, __checker_2__: Checker, __player_1__: Player, __player_2__: Player.  
   
-## Estrategias de testes  
-Para todas las clases, elegí hacer los tests de todos sus métodos, a excepción de los getters y setters, dada su simplicidad.  
+## Estrategias de tests  
+Para todas las clases, elegí hacer los tests de todos sus métodos, a excepción de los getters y setters, dada su simplicidad. Ademas para algunos métodos mas complejos, varios tests que testean distintos caminos.
+
+## Excepciones
+Como excepciones solo encontramos InputError, que se usa para manejar los casos en los que el usuario no ingresa un entero, cuando se le pide el numero de columna o de dado.
+
   

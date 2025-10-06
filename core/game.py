@@ -3,6 +3,7 @@ from core.player import Player
 from core.checker import Checker
 from core.dice import Dice
 from core.board import Board
+from core.exceptions import InputError
 
 class Game:
     """La clase Game define la logica del juego. Atributos: board (Board), dice (Dice),
@@ -79,16 +80,19 @@ class Game:
         for _ in range(loop_times):
             successful_move = False
             while not successful_move:
-                self.__board__.show_board()
-                if has_checkers_in_bar:
-                    successful_move, used_die = self.turn_fichas_barra(
+                try:
+                    self.__board__.show_board()
+                    if has_checkers_in_bar:
+                        successful_move, used_die = self.turn_fichas_barra(
                         player, dice, turn_player_checker)
-                elif self.can_finish_checkers(player):
-                    successful_move, used_die = self.turn_finalizar_fichas(
-                        player, dice, turn_player_checker)
-                else:
-                    successful_move, used_die = self.turn_normal(
-                        player, dice, turn_player_checker)
+                    elif self.can_finish_checkers(player):
+                        successful_move, used_die = self.turn_finalizar_fichas(
+                            player, dice, turn_player_checker)
+                    else:
+                        successful_move, used_die = self.turn_normal(
+                            player, dice, turn_player_checker)
+                except InputError as e:
+                    print(e)
             if used_die is not None:
                 dice.pop(dice.index(used_die))
             print("El movimiento fue completado exitosamente!")
@@ -115,9 +119,11 @@ class Game:
         print("Dados disponibles:")
         for i, x in enumerate(available_dice):
             print(f"Dado {i + 1}: {x}")
-
-        used_die: int = int(input("Que dado usaras? (ingresa la cantidad " \
-        "que muestra el dado)\n"))
+        try:
+            used_die: int = int(input("Que dado usaras? (ingresa la cantidad " \
+            "que muestra el dado)\n"))
+        except ValueError:
+            raise InputError
         if used_die not in available_dice:
             print("Ese dado no esta disponible. ")
             return False, None
@@ -148,15 +154,21 @@ class Game:
         for i, x in enumerate(cols):
             if x['checker'] == turn_player_checker and x['quantity'] > 0:
                 player_available_froms.append(i)
-        fro: int = int(input("Que ficha quieres mover? (ingresa columna)\n"))-1
+        try:
+            fro: int = int(input("Que ficha quieres mover? (ingresa columna)\n"))-1
+        except ValueError:
+            raise InputError
         if fro not in player_available_froms:
             print("No tienes fichas en esa posicion.")
             return False, None
         print("Dados disponibles:")
         for i, x in enumerate(dice):
             print(f"Dado {i+1}: {x}")
-        used_die: int = int(input("Que dado usaras? "
-        "(ingresa la cantidad que muestra el dado)\n"))
+        try:
+            used_die: int = int(input("Que dado usaras? "
+            "(ingresa la cantidad que muestra el dado)\n"))
+        except ValueError:
+            raise InputError
         if used_die not in dice:
             print("Ese dado no esta disponible. ")
             return False, None
@@ -229,15 +241,18 @@ class Game:
         for i, x in enumerate(cols):
             if x['checker'] == turn_player_checker and x['quantity'] > 0:
                 player_available_froms.append(i)
-
-        fro: int = int(input("Que ficha quieres mover? (ingresa columna)\n"))-1
-
+        try:
+            fro: int = int(input("Que ficha quieres mover? (ingresa columna)\n"))-1
+        except ValueError:
+            raise InputError
         if fro not in player_available_froms:
             print("No tienes fichas en esa posicion.")
             return False, None
-
-        used_die: int = int(input("Que dado usaras? (ingresa la cantidad " \
-        "que muestra el dado)\n"))
+        try:
+            used_die: int = int(input("Que dado usaras? (ingresa la cantidad " \
+            "que muestra el dado)\n"))
+        except ValueError:
+            raise InputError
 
         if used_die not in available_dice:
             print("Ese dado no esta disponible. ")
