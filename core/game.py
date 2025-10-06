@@ -71,31 +71,33 @@ class Game:
         else:
             print(f"Dado 1: {dice[0]}. \nDado 2: {dice[1]}. \n Tienes dobles!" )
         # Comienza loop que maneja cada movimiento disponible
-        has_checkers_in_bar = bool(
+        for _ in range(len(dice)):
+            has_checkers_in_bar = bool(
             self.__board__.get_columnas()[player.get_bar_index()]['quantity'] > 0)
-        loop_times = len(dice)
-        if has_checkers_in_bar:
-            bar_quan = self.__board__.get_columnas()[player.get_bar_index()]['quantity']
-            loop_times = bar_quan
-        for _ in range(loop_times):
+
             successful_move = False
+            if self.win_condition(self.__player_1__) or self.win_condition(self.__player_2__):
+                break
             while not successful_move:
                 try:
                     self.__board__.show_board()
                     if has_checkers_in_bar:
-                        successful_move, used_die = self.turn_fichas_barra(
+                        successful_move, used_die, message = self.turn_fichas_barra(
                         player, dice, turn_player_checker)
                     elif self.can_finish_checkers(player):
-                        successful_move, used_die = self.turn_finalizar_fichas(
+                        successful_move, used_die, message = self.turn_finalizar_fichas(
                             player, dice, turn_player_checker)
                     else:
-                        successful_move, used_die = self.turn_normal(
+                        successful_move, used_die, message = self.turn_normal(
                             player, dice, turn_player_checker)
                 except InputError as e:
                     print(e)
+                    continue
+                if message is not None:
+                    print(message)
             if used_die is not None:
                 dice.pop(dice.index(used_die))
-            print("El movimiento fue completado exitosamente!")
+
         self.__board__.show_board()
     def turn_fichas_barra(self, player: Player, dice, turn_player_checker) -> tuple:
         """Este método maneja la logica de un turno en el que el jugador tiene fichas en su barra.
@@ -105,15 +107,15 @@ class Game:
         available_dice = []
         fro = player.get_bar_practical_index()
         for i, d in enumerate(dice):
-            to = fro + d if fro == 5 else fro - d
+            to = fro + d if fro == -1 else fro - d
             if self.available_move(player.get_bar_index(), to):
                 available_dice.append(d)
         # Caso 1-1: no puede usar ninguno de los dados para
         # sacar fichas de la barra. Pierde el turno.
         if len(available_dice) == 0:
-            print("Mala suerte! No puedes usar ninguno de " \
-            "tus dados para sacar fichas de la barra. Pierdes el turno. ")
-            return True, None
+            msg ="Mala suerte! No puedes usar ninguno de " \
+            "tus dados para sacar fichas de la barra. Pierdes el turno. "
+            return True, None, msg
         # Caso 1-2: los dados que no se pueden usar son extraidos de la lista dice.
 
         print("Dados disponibles:")
@@ -125,9 +127,9 @@ class Game:
         except ValueError:
             raise InputError
         if used_die not in available_dice:
-            print("Ese dado no esta disponible. ")
-            return False, None
-        to: int = fro + used_die if fro == 5 else fro - used_die
+            msg = "Ese dado no esta disponible. "
+            return False, None, msg
+        to: int = fro + used_die if fro == -1 else fro - used_die
         bo = self.__board__
         if self.available_move(player.get_bar_index(), to):
             if bo.get_columnas()[to]['checker'] == turn_player_checker:
@@ -140,11 +142,12 @@ class Game:
                 bo.put_checker(to, turn_player_checker)
                 bo.remove_checker(player.get_bar_index())
                 bo.add_checker(player.get_bar_opp_index())
-            return True, used_die
-        print("El movimiento no se puede completar! " \
-        "Verifica que sea valido e intentalo de nuevo. ")
-        return False, None
-    def turn_normal(self, player: Player, dice, turn_player_checker) -> tuple:
+            msg = "El movimiento fue completado exitosamente!"
+            return True, used_die, msg
+        msg = "El movimiento no se puede completar! " \
+        "Verifica que sea valido e intentalo de nuevo. "
+        return False, None, msg
+    def turn_normal(self, player: Player, dice, turn_player_checker, desde_finish:bool=False, fro_arg=0, die_arg=0) -> tuple:
         """Este método maneja la logica de un turno normal, en el que el jugador
         elige de donde hacia donde mover una ficha suya. Devuelve True si fue exitoso,
         junto con el dado que fue usado."""
@@ -155,23 +158,24 @@ class Game:
             if x['checker'] == turn_player_checker and x['quantity'] > 0:
                 player_available_froms.append(i)
         try:
-            fro: int = int(input("Que ficha quieres mover? (ingresa columna)\n"))-1
+            fro: int = (int(input("Que ficha quieres mover? (ingresa columna)\n"))-1 if desde_finish is False
+                        else fro_arg)
         except ValueError:
             raise InputError
         if fro not in player_available_froms:
-            print("No tienes fichas en esa posicion.")
-            return False, None
+            msg = "No tienes fichas en esa posicion."
+            return False, None, msg
         print("Dados disponibles:")
         for i, x in enumerate(dice):
             print(f"Dado {i+1}: {x}")
         try:
             used_die: int = int(input("Que dado usaras? "
-            "(ingresa la cantidad que muestra el dado)\n"))
+            "(ingresa la cantidad que muestra el dado)\n")) if desde_finish is False else die_arg
         except ValueError:
             raise InputError
         if used_die not in dice:
-            print("Ese dado no esta disponible. ")
-            return False, None
+            msg = "Ese dado no esta disponible. "
+            return False, None, msg
         to: int = fro + used_die if player.get_checker_type() == 1 else fro - used_die
 
         # Caso 2-1: el jugador intenta hacer un movimiento normal.
@@ -187,42 +191,36 @@ class Game:
                 bo.put_checker(to, turn_player_checker)
                 bo.remove_checker(fro)
                 bo.add_checker(player.get_bar_opp_index())
-            return True, used_die
+            msg = "El movimiento fue completado exitosamente!"
+            return True, used_die, msg
 
-        print("El movimiento no se puede completar! " \
-        "Verifica que sea valido e intentalo de nuevo. ")
-        return False, None
+        msg = "El movimiento no se puede completar! " \
+        "Verifica que sea valido e intentalo de nuevo. "
+        return False, None, msg
+
     # Turno (finalizar fichas)
-    def prepare_available_dice(self, player, dice) -> list:
-        """Este metodo prepara available_dice para el metodo turn_finalizar_fichas."""
-        required_dice = [1, 2, 3, 4, 5, 6]
-        list_pop = []
-        if player.get_checker_type() == 1:
-            for i, x in enumerate(range(23, 19, -1)):
-                if self.get_board().get_columnas()[x]['quantity'] == 0:
-                    list_pop.append(i)
-                if self.get_board().get_columnas()[x]['quantity'] > 0:
-                    break
-        if player.get_checker_type() == 2:
-            for i, x in enumerate(range(0, 6)):
-                if self.get_board().get_columnas()[x]['quantity'] == 0:
-                    list_pop.append(i)
-                if self.get_board().get_columnas()[x]['quantity'] > 0:
-                    break
-
-        for i in sorted(list_pop, reverse=True):
-            required_dice.pop(i)
-
+    def prepare_available_dice(self, player:Player, dice) -> list:
+        """Este metodo prepara available_dice para el metodo turn_finalizar_fichas. Devuelve la lista available_dice"""
         available_dice = []
-
-        for x in dice:
-            if x in required_dice:
-                available_dice.append(x)
-
-        return available_dice
+        if player.get_checker_type() == 1:
+            for x in dice:
+                for i in range(18,24):
+                    if self.get_board().get_columnas()[i]['quantity'] > 0:
+                        if i + x >= 24:
+                            available_dice.append(x)
+                            break
+        if player.get_checker_type == 2:
+            for x in dice:
+                for i in range(5,-1, -1):
+                    if self.get_board().get_columnas()[i]['quantity'] > 0:
+                        if i - x >= -1:
+                            available_dice.append(x)
+                            break
+        return dice
     def turn_finalizar_fichas(self, player: Player, dice, turn_player_checker) -> tuple:
         """Este metodo maneja la logica de un turno en el que el jugador saca
-        una ficha del tablero. Devuelve True si fue exitoso, junto con el dado que fue usado."""
+        una ficha del tablero. Devuelve successful_dice = True si fue exitoso, junto con 
+        used_die = el dado que fue usado. Ademas msg, un mensaje para el usuario."""
 
         print("Para finalizar el recorrido de una ficha, debes sacar exactamente el numero que" \
         " le falta en los dados, o uno mayor si ya sacaste esa ficha")
@@ -230,8 +228,8 @@ class Game:
         available_dice = self.prepare_available_dice(player, dice)
 
         if len(available_dice) == 0:
-            print("Mala suerte! No tienes ningun dado para usar.")
-            return True, None
+            msg ="Mala suerte! No tienes ningun dado para usar."
+            return True, None, msg
 
         print("Puedes usar los siguientes dados:")
         for i, x in enumerate(available_dice):
@@ -246,8 +244,8 @@ class Game:
         except ValueError:
             raise InputError
         if fro not in player_available_froms:
-            print("No tienes fichas en esa posicion.")
-            return False, None
+            msg = "No tienes fichas en esa posicion."
+            return False, None, msg
         try:
             used_die: int = int(input("Que dado usaras? (ingresa la cantidad " \
             "que muestra el dado)\n"))
@@ -255,26 +253,33 @@ class Game:
             raise InputError
 
         if used_die not in available_dice:
-            print("Ese dado no esta disponible. ")
-            return False, None
+            msg = "Ese dado no esta disponible. "
+            return False, None, msg
+        
+        if (player.get_checker_type() == 1 and fro + used_die < 24 or
+            player.get_checker_type() == 2 and fro - used_die > -1):
 
+            return self.turn_normal(player, dice, turn_player_checker, True, fro, used_die)
         return self.finish_checker(fro, player, used_die)
     def finish_checker(self, fro_arg, player: Player, used_die) -> tuple:
-        """Termina una ficha."""
+        """Recibe los argumentos fro, player, used_die para termina una ficha. Devuelve
+        una tupla con successful_move (bool), used_die (int) y msg (str)."""
         fro = fro_arg
         finish = self.__board__.remove_checker
         if (player.get_checker_type() == 1 and fro + used_die == 24 or
             player.get_checker_type() == 2 and fro - used_die == -1):
-            print("Bien! Pudiste sacar la ficha!")
+            msg = "Bien! Pudiste sacar la ficha!"
             finish(fro)
-            return True, used_die
+            return True, used_die, msg
+
         if player.get_checker_type() == 1:
             for x in range(1, 6):
                 if (fro != 18 and
                     self.get_board().get_columnas()[fro - x]['quantity'] == 0 and
                     fro + used_die - x == 24):
                     finish(fro)
-                    return True, used_die
+                    msg = "Bien! Pudiste sacar la ficha!"
+                    return True, used_die, msg
                 if self.get_board().get_columnas()[fro - x]['quantity'] != 0:
                     break
         if player.get_checker_type() == 2:
@@ -283,14 +288,16 @@ class Game:
                     self.get_board().get_columnas()[fro + x]['quantity'] == 0 and
                     fro - used_die + x == -1):
                     finish(fro)
-                    return True, used_die
+                    msg = "Bien! Pudiste sacar la ficha!"
+                    return True, used_die, msg
                 if self.get_board().get_columnas()[fro + x]['quantity'] != 0:
                     break
         if (player.get_checker_type() == 1 and fro + used_die != 24 or
             player.get_checker_type() == 2 and fro - used_die != -1):
-            print("El movimiento no se puede completar! " \
-            "Verifica que sea valido e intentalo de nuevo")
-        return False, None
+            msg = "El movimiento no se puede completar! " \
+            "Verifica que sea valido e intentalo de nuevo"
+        msg = 'no pasa nada'
+        return False, None, msg
 
     # Verificadores condicionales
     def available_move(self, fro:int, to:int) -> bool:
