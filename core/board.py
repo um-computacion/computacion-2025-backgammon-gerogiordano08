@@ -5,8 +5,7 @@ class Board:
     todos los metodos necesarios para la actividad sobre este. Atributo: columnas (dict)."""
     def __init__(self, testing:bool = False):
         self.__redis_store__ = RedisStore()
-        if not self.__redis_store__.get_value('columnas') or testing:
-            self.__columnas__ = [{'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
+        cols = [{'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
                                 {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
                                 {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
                                 {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
@@ -20,8 +19,16 @@ class Board:
                                 {'checker' : '', 'quantity' : 0}, {'checker' : '', 'quantity' : 0},
                                 {'bar': True, 'checker' : 'x', 'quantity' : 0},
                                 {'bar': True, 'checker' : 'o', 'quantity' : 0}]
+
+        if testing:
+            self.__columnas__ = cols
         else:
-            self.__columnas__ = self.__redis_store__.load_list('columnas')
+            try:
+                self.__columnas__ = self.__redis_store__.load_list('columnas')
+            except(TypeError, ValueError):
+                self.__columnas__ = cols
+
+
     def show_board(self):
         """ Este método imprime el tablero, poniendo el método checker(column, level)
         con las respectivas coordenadas en cada espacio ocupable por fichas del tablero."""

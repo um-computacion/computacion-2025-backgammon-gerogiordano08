@@ -32,7 +32,6 @@ class CLITests(unittest.TestCase):
 
     @patch('builtins.print')
     def test_do_play_no_hay_juego(self, mock_print):
-        self.cli.set_contador(0)
         self.cli.do_play('')
         mock_print.assert_any_call("Primero debes usar el comando 'start' para iniciar un nuevo juego!")
 
@@ -42,7 +41,6 @@ class CLITests(unittest.TestCase):
         ng = Game('a', 'b', testing=True)
         b = Board(testing=True)
         b.put_checker(1, 'o')
-        b.show_board()
         ng.set_board(b)
         self.cli.set_game(ng)
         self.cli.do_play('')
