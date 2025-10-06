@@ -32,12 +32,12 @@ class Player:
         """Devuelve el indice que se debe usar al
         intentar mover fichas en el tablero desde la barra."""
         if self.__bar_index__ == 24:
-            return 5
-        return 18
+            return -1
+        return 24
     def get_bar_opp_practical_index(self):
         """Devuelve el indice que se debe usar al
         intentar mover fichas en el tablero desde la
         barra del jugador opuesto."""
         if self.__bar_index__ == 24:
-            return 18
-        return 5
+            return 24
+        return -1

@@ -2,7 +2,12 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog.
 
-## [06/10/2025]
+## [06/10/2025] commit 2
+
+### Alterado
+- Se corrigieron algunos errores no solo de dinamicas, sino de logica del juego.
+
+## [06/10/2025] commit 1
 
 ### Agregado
 

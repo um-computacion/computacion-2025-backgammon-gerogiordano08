@@ -53,14 +53,14 @@ class CLI(cmd.Cmd):
         """Continua con el juego"""
         g: Game = self.__game__
         winner = None
-        if g.win_condition(g.__player_1__):
-            winner = g.__player_1__
-        if g.win_condition(g.__player_2__):
-            winner = g.__player_2__
         c = self.__contador__
         if c == 0:
             print("Primero debes usar el comando 'start' para iniciar un nuevo juego!")
             return
+        if g.win_condition(g.__player_1__):
+            winner = g.__player_1__
+        if g.win_condition(g.__player_2__):
+            winner = g.__player_2__
         if winner is not None:
             self.winner_message(winner)
             return
