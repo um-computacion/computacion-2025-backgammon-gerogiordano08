@@ -1,4 +1,4 @@
-from core.cli import CLI
+from cli.cli import CLI
 def main():
     command_line_interface = CLI()
     command_line_interface.cmdloop()

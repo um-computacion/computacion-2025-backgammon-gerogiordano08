@@ -28,7 +28,7 @@ class CLI(cmd.Cmd):
 
 
 
-    def do_start(self, line):
+    def do_start(self, _line):
         """Comienza el juego."""
         if self.__contador__ != 0:
             while True:
@@ -49,7 +49,7 @@ class CLI(cmd.Cmd):
         self.__contador__ = 1
         print("El juego fue iniciado con exito!")
 
-    def do_play(self, line):
+    def do_play(self, _line):
         """Continua con el juego"""
         g: Game = self.__game__
         winner = None
@@ -86,11 +86,11 @@ class CLI(cmd.Cmd):
               "disfrutado, gracias por jugar!")
         self.__contador__ = 0
 
-    def do_salir(self, line):
+    def do_salir(self, _line):
         """Cierra el programa."""
         print("Gracias por jugar!")
         return True
-    def do_ayuda(self, line):
+    def do_ayuda(self, _line):
         """Muestra los comandos disponibles para ejecutar."""
         print(f"salir -> {self.do_salir.__doc__}")
         print(f"reglas -> {self.do_reglas.__doc__}")
@@ -174,4 +174,3 @@ class CLI(cmd.Cmd):
     def set_contador(self, new_contador:int):
         """Define el atributo contador"""
         self.__contador__ = new_contador
-        

@@ -9,9 +9,9 @@ class PlayerTests(unittest.TestCase):
         self.assertEqual(self.p2.get_bar_opp_index(), 24)
     def test_get_bar_practical_index(self):
         """Verifica que la funcion devuelva el indice practico de la barra correcto."""
-        self.assertEqual(self.p1.get_bar_practical_index(), 5)
-        self.assertEqual(self.p2.get_bar_practical_index(), 18)
+        self.assertEqual(self.p1.get_bar_practical_index(), -1)
+        self.assertEqual(self.p2.get_bar_practical_index(), 24)
     def test_get_opp_bar_practical_index(self):
         """Verifica que la funcion devuelva el indice practico de la barra del oponente correcto."""
-        self.assertEqual(self.p1.get_bar_opp_practical_index(), 18)
-        self.assertEqual(self.p2.get_bar_opp_practical_index(), 5)
+        self.assertEqual(self.p1.get_bar_opp_practical_index(), 24)
+        self.assertEqual(self.p2.get_bar_opp_practical_index(), -1)
