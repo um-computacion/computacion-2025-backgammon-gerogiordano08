@@ -1,4 +1,4 @@
-from core.cli import CLI
+from cli.cli import CLI
 from core.game import Game
 from core.board import Board
 from core.redis_store import RedisStore
@@ -57,14 +57,14 @@ class CLITests(unittest.TestCase):
         mock_print.assert_any_call("Felicitaciones b!!!\nGanaste el juego =)\nEspero que lo hayas disfrutado, gracias por jugar!")
 
     @patch('builtins.input', side_effect=['a', 'b'])
-    @patch("core.cli.Game.turn")
+    @patch("cli.cli.Game.turn")
     def test_do_play_to_turn_p1(self, mock_turn, mock_input):
         self.cli.do_start('')
         self.cli.do_play('')
         mock_turn.assert_called_once()
 
     @patch('builtins.input', side_effect=['a', 'b'])
-    @patch("core.cli.Game.turn")
+    @patch("cli.cli.Game.turn")
     def test_do_play_to_turn_p2(self, mock_turn, mock_input):
         self.cli.do_start('')
         self.cli.set_contador(2)

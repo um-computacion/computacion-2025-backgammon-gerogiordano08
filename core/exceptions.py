@@ -1,3 +1,4 @@
+"""Modulo Excepciones. Contiene la definicion de las excepciones."""
 class GameError(Exception):
     """Excepcion base"""
 class InputError(Exception):

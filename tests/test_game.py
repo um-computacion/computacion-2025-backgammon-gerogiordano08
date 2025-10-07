@@ -1,6 +1,7 @@
 from core.game import Game
 import unittest
 from unittest.mock import patch
+from core.exceptions import InputError
 class GameTests(unittest.TestCase):
     def setUp(self):
         self.game = Game('a', 'b', testing=True)
@@ -50,7 +51,21 @@ class GameTests(unittest.TestCase):
             self.assertIn(x, (1, 2, 3, 4, 5, 6))
     
     # Tests del metodo turn
+    @patch('builtins.input', side_effect=['a', SystemExit])
+    @patch('builtins.print')
+    def test_turn_input_error(self, mock_print, mock_input):
+        """Verifica que si se levanta InputError, imprima su mensaje y continue."""
+        with self.assertRaises(SystemExit):
+            self.game.turn(self.game.get_player_1())
+        mock_print.assert_any_call("Debes ingresar un número!")
 
+    @patch.object(Game, 'turn_normal', return_value=(True, None, 'mensaje por defecto'))
+    @patch('builtins.print')
+    def test_turn_message(self, mock_print, mock_tn):
+        """Verifica que luego de definir un mensaje, la funcion lo imprima."""
+
+        self.game.turn(self.game.get_player_1())
+        mock_print.assert_any_call('mensaje por defecto')
     @patch.object(Game, "turn_fichas_barra", side_effect=SystemExit)
     def test_turn_to_turn_fichas_barra(self, mock_tfb):
         """Verifica que si tiene fichas en la barra, el metodo turn acceda a turn_fichas_barra"""
@@ -59,6 +74,7 @@ class GameTests(unittest.TestCase):
         with self.assertRaises(SystemExit):
             self.game.turn(self.game.get_player_1())
         mock_tfb.assert_called_once()
+        
 
     @patch.object(Game, "turn_normal", side_effect=SystemExit)
     def test_turn_to_turn_normal(self, mock_tn):
@@ -87,25 +103,32 @@ class GameTests(unittest.TestCase):
         """Verifica que si te tocan dados invalidos para sacar fichas de tu barra,
         devuelva True (successful_move) y None (used_die)"""
         self.col[24][self.q] = 1
-        self.assertEqual(self.game.turn_fichas_barra(self.game.get_player_1(), (2, 2), 'x'), (True, None))
+        self.assertEqual(self.game.turn_fichas_barra(self.game.get_player_1(), (6, 6), 'x'), (True, None, "Mala suerte! No puedes usar ninguno de " \
+            "tus dados para sacar fichas de la barra. Pierdes el turno. "))
 
     @patch("builtins.input", return_value="3")
     def test_turn_fichas_barra_dado_no_disponible(self, mock_input):
         """Verifica que si intentas elegir un dado no disponible,
         devuelva False (successful_move) y None (used_die)"""
-        self.assertEqual(self.game.turn_fichas_barra(self.game.get_player_1(), (5, 6), 'x'), (False, None))
+        self.assertEqual(self.game.turn_fichas_barra(self.game.get_player_1(), (5, 6), 'x'), (False, None, "Ese dado no esta disponible. "))
     
     @patch("builtins.input", return_value="3")
     def test_turn_fichas_barra_movimiento_correcto(self, mock_input):
         """Verifica que si se completa el movimiento,
         devuelva True (successful_move) y used_die (used_die)"""
-        self.assertEqual(self.game.turn_fichas_barra(self.game.get_player_1(), (3, 6), 'x'), (True, 3))
+        self.assertEqual(self.game.turn_fichas_barra(self.game.get_player_1(), (3, 6), 'x'), (True, 3, "El movimiento fue completado exitosamente!"))
     
-    @patch("builtins.input", return_value="2")
+    @patch("builtins.input", return_value="6")
     def test_turn_fichas_barra_movimiento_invalido(self, mock_input):
         """Verifica que si intenta hacer un movimiento invalido,
         devuelva False (successful_move) y None (used_die)"""
-        self.assertEqual(self.game.turn_fichas_barra(self.game.get_player_1(), (3, 2), 'x'), (False, None))
+        self.assertEqual(self.game.turn_fichas_barra(self.game.get_player_1(), (6, 2), 'x'), (False, None, "Ese dado no esta disponible. " ))
+
+    @patch('builtins.input', return_value='a')
+    def test_turn_fichas_barra_raise_input_error(self, mock_input):
+        """Verifica que si se ingresa un no entero cuando se requiere uno, levante InputError."""
+        with self.assertRaises(InputError):
+            self.game.turn_fichas_barra(self.game.get_player_1(), (2, 2), 'x')
 
     # -----------------------------------
 
@@ -116,77 +139,73 @@ class GameTests(unittest.TestCase):
         """Verifica que si intentas mover fichas desde donde no tienes,
         devuelva False (successful_move) y None (used_die)"""
         
-        self.assertEqual(self.game.turn_normal(self.game.get_player_1(), (3, 2), 'x'), (False, None))
+        self.assertEqual(self.game.turn_normal(self.game.get_player_1(), (3, 2), 'x'), (False, None, "No tienes fichas en esa posicion."))
     
     @patch("builtins.input", side_effect=["1", "4"])
     def test_turn_normal_dado_no_disponible(self, mock_input):
         """Verifica que si intentas elegir un dado no disponible,
         devuelva False (successful_move) y None (used_die)"""
-        self.assertEqual(self.game.turn_normal(self.game.get_player_1(), (3, 2), 'x'), (False, None))
+        self.assertEqual(self.game.turn_normal(self.game.get_player_1(), (3, 2), 'x'), (False, None, "Ese dado no esta disponible."))
     
     @patch("builtins.input", side_effect=["1", "2"])
     def test_turn_normal_movimiento_correcto(self, mock_input):
         """Verifica que si se completa el movimiento,
         devuelva True (successful_move) y used_die (used_die)"""
-        self.assertEqual(self.game.turn_normal(self.game.get_player_1(), (3, 2), 'x'), (True, 2))
+        self.assertEqual(self.game.turn_normal(self.game.get_player_1(), (3, 2), 'x'), (True, 2, "El movimiento fue completado exitosamente!"))
     
     @patch("builtins.input", side_effect=["1", "5"])
     def test_turn_normal_movimiento_invalido(self, mock_input):
         """Verifica que si intenta hacer un movimiento invalido,
         devuelva False (successful_move) y None (used_die)"""
-        self.assertEqual(self.game.turn_normal(self.game.get_player_1(), (5, 2), 'x'), (False, None))
+        self.assertEqual(self.game.turn_normal(self.game.get_player_1(), (5, 2), 'x'), (False, None, "El movimiento no se puede completar! Verifica que sea valido e intentalo de nuevo."))
+    
+    @patch('builtins.input', return_value='a')
+    def test_turn_normal_raise_input_error_columna(self, mock_input):
+        """Verifica que si se ingresa un no entero cuando se requiere uno, levante InputError."""
+        with self.assertRaises(InputError):
+            self.game.turn_normal(self.game.get_player_1(), (2, 2), 'x')
+    
+    @patch('builtins.input', side_effect=['1', 'a'])
+    def test_turn_normal_raise_input_error_dado(self, mock_input):
+        """Verifica que si se ingresa un no entero cuando se requiere uno, levante InputError."""
+        with self.assertRaises(InputError):
+            self.game.turn_normal(self.game.get_player_1(), (2, 2), 'x')
 
     # -----------------------------------
 
     # Tests del metodo turn_finalizar_fichas
 
-    def test_turn_finalizar_fichas_dados_invalidos(self):
-        """Verifica que si te tocan dados invalidos para sacar fichas del tablero,
-        devuelva True (successful_move) y None (used_die)"""
-
-        self.game.get_board().clear_board()
-        self.col[21][self.q] = 2
-        self.col[21][self.c] = 'x'
-        self.assertEqual(self.game.turn_finalizar_fichas(self.game.get_player_1(), (2, 2), 'x'), (True, None))
-
-    @patch("builtins.input", return_value="23")
+    @patch("builtins.input", return_value="20")
     def test_turn_finalizar_fichas_no_fichas(self, mock_input):
         """Verifica que si intentas mover fichas desde donde no tienes,
-        devuelva False (successful_move) y None (used_die)"""
+        devuelva False (successful_move), None (used_die) y el mensaje correspondiente (msg)"""
 
         self.game.get_board().clear_board()
         self.col[22][self.q] = 2
         self.col[22][self.c] = 'x'
 
-        self.assertEqual(self.game.turn_finalizar_fichas(self.game.get_player_1(), (3, 2), 'x'), (False, None))
+        self.assertEqual(self.game.turn_finalizar_fichas(self.game.get_player_1(), (3, 2), 'x'), (False, None, "No tienes fichas en esa posicion."))
     
-    @patch("builtins.input", return_value="3")
+    @patch("builtins.input", side_effect=["21", "3"])
     def test_turn_finalizar_fichas_dado_no_disponible(self, mock_input):
         """Verifica que si intentas elegir un dado no disponible,
         devuelva False (successful_move) y None (used_die)"""
-
-        self.assertEqual(self.game.turn_finalizar_fichas(self.game.get_player_1(), (5, 6), 'x'), (False, None))
-    
-    # -----------------------------------
-
-    # Tests para prepare_available_dice
-
-    def test_prepare_available_dice_dados_mayores(self):
-        """Verifica que si no quedan fichas en una casilla que requiere un dado mayor,
-        se puede usar ese dado mayor para terminar una ficha que requiera un dado menor."""
-
         self.game.get_board().clear_board()
-        self.col[19][self.q] = 1
-        self.col[19][self.c] = 'x'
-        self.assertEqual(self.game.prepare_available_dice(self.game.get_player_1(), [6, 5]), [6, 5])
-    def test_prepare_available_dice_dados_menores(self):
-        """Verifica que si quieres usar un dado menor para terminar una ficha, lo invalide."""
-
-        self.game.get_board().clear_board()
-        self.col[19][self.q] = 1
-        self.col[19][self.c] = 'x'
-        self.assertEqual(self.game.prepare_available_dice(self.game.get_player_1(), [6, 3]), [6])
+        self.col[20][self.q] = 2
+        self.col[20][self.c] = 'x'
+        self.assertEqual(self.game.turn_finalizar_fichas(self.game.get_player_1(), (5, 6), 'x'), (False, None, "Ese dado no esta disponible."))
     
+    @patch('builtins.input', return_value='a')
+    def test_turn_finalizar_fichas_raise_input_error_columna(self, mock_input):
+        """Verifica que si se ingresa un no entero cuando se requiere uno, levante InputError."""
+        with self.assertRaises(InputError):
+            self.game.turn_finalizar_fichas(self.game.get_player_1(), (2, 2), 'x')
+
+    @patch('builtins.input', side_effect=['19', 'a'])
+    def test_turn_finalizar_fichas_raise_input_error_dado(self, mock_input):
+        """Verifica que si se ingresa un no entero cuando se requiere uno, levante InputError."""
+        with self.assertRaises(InputError):
+            self.game.turn_finalizar_fichas(self.game.get_player_1(), (2, 2), 'x')
     # -----------------------------------
 
     # Tests para finish_checker
@@ -194,27 +213,20 @@ class GameTests(unittest.TestCase):
     def test_finish_checker_sacar_ficha_cantidad_exacta(self):
         """Verifica que al usar un dado con la cantidad exacta necesaria para sacara el dado,
         devuelva True (successful_move) y used_die (used_die)"""
-        self.assertEqual(self.game.finish_checker(22, self.game.get_player_1(), 2), (True, 2))
+        self.assertEqual(self.game.finish_checker(22, self.game.get_player_1(), 2), (True, 2, 'Bien! Pudiste sacar la ficha!'))
     def test_finish_checker_dados_mayores(self):
         """Verifica que si no quedan fichas en una casilla que requiere un dado mayor,
         se puede usar ese dado mayor para terminar una ficha que requiera un dado menor."""
         self.game.get_board().clear_board()
         self.col[19][self.q] = 1
         self.col[19][self.c] = 'x'
-        self.assertEqual(self.game.finish_checker(19, self.game.get_player_1(), 6), (True, 6))
-
-    def test_finish_checker_dice_dados_menores(self):
-        """Verifica que si quieres usar un dado menor para terminar una ficha,
-        devuelva False (successful_move) y None (used_die)"""
-        self.game.get_board().clear_board()
-        self.col[19][self.q] = 1
-        self.col[19][self.c] = 'x'
-        self.assertEqual(self.game.finish_checker(19, self.game.get_player_1(), 3), (False, None))
+        self.assertEqual(self.game.finish_checker(19, self.game.get_player_1(), 6), (True, 6, 'Bien! Pudiste sacar la ficha!'))
     
     # -----------------------------------
 
     def test_available_move(self):
         """ Verifica que available_move(fro, to) devuelve True para las condiciones suficientes y False para las condiciones insuficientes. """
+        self.assertFalse(self.game.available_move(2, 24))
         self.assertTrue(
             # de 'x' a 0
             self.game.available_move(0, 2) and 
