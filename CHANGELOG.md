@@ -2,6 +2,15 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog.
 
+## [07/10/2025] commit 2
+
+## Agregado
+- Para comenzar con la implementacion de la interfaz grafica se creo la clase UI que por ahora inicializa pygame.
+## [07/10/2025] commit 1
+
+## Alterado
+- Algunos tests habian quedado rotos. Fueron arreglados y se llego al 90% de coverage.
+
 ## [06/10/2025] commit 2
 
 ### Alterado

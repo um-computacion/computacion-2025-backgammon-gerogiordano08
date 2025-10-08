@@ -19,4 +19,5 @@ Para todas las clases, elegí hacer los tests de todos sus métodos, a excepció
 ## Excepciones
 Como excepciones solo encontramos InputError, que se usa para manejar los casos en los que el usuario no ingresa un entero, cuando se le pide el numero de columna o de dado.
 
-  
+## Pygame
+Para implementar la interfaz grafica tengo pensado primero la clase UI que maneje todo lo que se va a mostrar en pantalla, y luego otra clase que traduzca todo desde core hacia la pantalla.
