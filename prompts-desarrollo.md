@@ -162,3 +162,63 @@ Todos los prompts de ChatGPT fueron hechos en el mismo chat, por lo que ya tenia
                 Si necesitás modificar la lista en el lugar, usá la opción (2) borrando en orden inverso.
                 👉 ¿Querés que te arme un ejemplo aplicado directamente a tu caso del backgammon, donde required_dice tiene que eliminar varias posiciones a la vez?"
         - Uso: Use la segunda sugerencia, en el metodo turn_finalizar_fichas() en game.py
+- Gemini 2.5 Pro:
+        - Input: Entonces, como hago una función que detecte si un punto dado esta dentro de un triangulo dado?
+        - Output:
+                ¡Claro! Te explico cómo se construye, paso a paso, la función que has seleccionado. El método que utiliza es el más robusto y común en gráficos por computadora, conocido como coordenadas baricéntricas.
+
+                La idea es tratar tu punto P como una "mezcla" de los tres vértices del triángulo (A, B y C). Si la mezcla requiere cantidades positivas de los tres vértices, entonces el punto está dentro.
+
+                Aquí tienes los pasos para crear la función:
+
+                Paso 1: Definir las Entradas de la Función
+
+                La función necesita dos cosas:
+
+                El punto que quieres comprobar, por ejemplo pt = (px, py).
+
+                Los tres vértices que definen el triángulo, por ejemplo triangle = [A, B, C], donde A, B y C son tuplas de coordenadas como (ax, ay).
+
+                Python
+                def is_point_in_triangle(pt, triangle):
+                # ... aquí irá la lógica ...
+                Paso 2: La Lógica Matemática (El Corazón de la Función)
+
+                Este es el cálculo central. Se basa en resolver un pequeño sistema de ecuaciones de álgebra lineal para encontrar unos "pesos" (s y t).
+
+                Desglosar las coordenadas: Primero, para que sea más fácil de leer, asignas todas las coordenadas x e y a variables separadas.
+
+                Python
+                (p_x, p_y) = pt
+                (v1_x, v1_y) = triangle[0] # Vértice A
+                (v2_x, v2_y) = triangle[1] # Vértice B
+                (v3_x, v3_y) = triangle[2] # Vértice C
+                Calcular el Denominador (d): Se calcula un valor d que es proporcional al área del triángulo. Este valor es crucial porque si es 0, significa que los tres vértices están en una línea recta y no forman un triángulo real.
+
+                Python
+                d = (v2_y - v3_y) * (v1_x - v3_x) + (v3_x - v2_x) * (v1_y - v3_y)
+                if d == 0:
+                return False # No es un triángulo, así que el punto no puede estar dentro
+                Calcular los Pesos (s y t): Luego, usas dos fórmulas similares para calcular los dos pesos principales. Estos pesos te dicen dónde está el punto P en relación con los lados del triángulo.
+
+                Python
+                s = (v2_y - v3_y) * (p_x - v3_x) + (v3_x - v2_x) * (p_y - v3_y)
+                t = (v3_y - v1_y) * (p_x - v3_x) + (v1_x - v3_x) * (p_y - v3_y)
+                Normalizar los Pesos: Finalmente, divides s y t por el denominador d que calculaste antes. Esto los pone en la escala correcta (de 0 a 1).
+
+                Python
+                s /= d
+                t /= d
+                Paso 3: La Comprobación Final
+
+                Esta es la parte más fácil e intuitiva. Un punto está dentro del triángulo si y solo si se cumplen estas tres condiciones:
+
+                El primer peso s es positivo (s > 0).
+
+                El segundo peso t es positivo (t > 0).
+
+                La suma de ambos pesos es menor que 1 (s + t < 1). Esta última condición asegura implícitamente que el tercer peso también es positivo.
+
+                Python
+                return s > 0 and t > 0 and (s + t) < 1
+        - Uso: Esta funcion es clave para detectar cuanto el jugador toca en un triangulo del tablero para mover una ficha. La voy a implementar en la clase HitMap.
