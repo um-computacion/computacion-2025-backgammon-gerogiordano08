@@ -1,6 +1,21 @@
 # Changelog
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog.
+## [14/10/2025]
+
+### Agregado
+- Se creo la clase HitMap que define la logica necesaria para detectar donde clickea el usuario.
+
+## [12/10/2025]
+
+### Agregado
+
+- Fue creado todo lo que debe ser renderizado todo el tiempo en el juego, como los triangulos o los margenes.
+
+## [07/10/2025] commit 3
+
+### Agregado
+- Fueron creados los assets de caras de dados y fichas.
 
 ## [07/10/2025] commit 2
 
