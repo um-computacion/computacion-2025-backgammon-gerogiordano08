@@ -29,7 +29,7 @@ class HitMap:
                                self.__poly_height__)
             self.__points__.append({"poly":poly, "rect":rect, "index": 13 + i})
         #poligonos inferiores (12...1)
-        for i in range(12):
+        
             # x agrega el ancho de la barra (poly_width)
             # la adicion de 20 se refiere al ancho de las lineas de la barra
             x = self.__poly_width__ + 20 if i >= 6 else 0

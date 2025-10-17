@@ -1,5 +1,7 @@
 """Modulo app. Define la clase UI."""
-from hitmap import HitMap
+from pygame_ui.hitmap import HitMap
+from pygame_ui.controller import Controller
+from core.game import Game
 import pygame
 class UI:
     """La clase UI se encarga de manejar la interfaz grafica con pygame."""
@@ -9,8 +11,12 @@ class UI:
         self.__screen__ = pygame.display.set_mode((self.__width__, self.__height__))
         self.__clock__ = pygame.time.Clock()
         self.__board_background__ = self.background()
+        self.__game__ = Game('', '')
+        self.__game__.prepare_board()
         self.__hitmap__ = HitMap(72, 184, 72, 21)
+        self.__controller__ = Controller(self.__game__)
         self.__hitmap__.build()
+        pygame.image.load("assets/images/checker_dark.png").convert()
     def run(self):
         """Inicia la interfaz grafica."""
         pygame.init()
@@ -26,6 +32,7 @@ class UI:
                 clicked_info = self.__hitmap__.hit_test(click_pos)
                 print(f"CLIC en {click_pos} -> Resultado: {clicked_info}")
             self.__screen__.blit(self.__board_background__, (0, 0))
+            self.__controller__.draw(self.__screen__)
             pygame.display.flip()
         pygame.quit()
     def background(self):
@@ -80,6 +87,5 @@ class UI:
                                  (652.5+ancho*2*i, 205)))
 
         return bg
-
 ui = UI()
 ui.run()

@@ -1,6 +1,12 @@
 # Changelog
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog.
+
+## [17/10/2025]
+### Agregado
+
+- Se creo la clase controller que controla la logica del juego para enviarla a la interfaz grafica.
+
 ## [14/10/2025]
 
 ### Agregado
