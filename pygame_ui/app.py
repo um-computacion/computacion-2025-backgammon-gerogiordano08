@@ -6,6 +6,7 @@ import pygame
 class UI:
     """La clase UI se encarga de manejar la interfaz grafica con pygame."""
     def __init__(self) -> None:
+        pygame.init()
         self.__width__ = 1000
         self.__height__ = 750
         self.__screen__ = pygame.display.set_mode((self.__width__, self.__height__))
@@ -19,7 +20,6 @@ class UI:
         pygame.image.load("assets/images/checker_dark.png").convert()
     def run(self):
         """Inicia la interfaz grafica."""
-        pygame.init()
         pygame.display.set_caption('| Backgammon -+- Gerónimo Giordano |')
         run = True
         while run:

@@ -2,6 +2,12 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog.
 
+## [18/10/2025]
+
+### Agregado
+- Clase Controller 
+    - Cuando hay mas de 4 fichas en una casilla, muestra solo cuatro junto con el numero en la cuarta casilla
+
 ## [17/10/2025]
 ### Agregado
 
