@@ -2,6 +2,11 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog.
 
+## [20/10/2025]
+
+### Alterado
+- El contador que marca de quien es el turno ahora es manejado por Game y no por CLI, para poder conectar de manera mas limpia el controlador de graficos con la logica del juego.
+
 ## [18/10/2025]
 
 ### Agregado

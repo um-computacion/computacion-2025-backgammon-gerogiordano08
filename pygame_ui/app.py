@@ -14,10 +14,9 @@ class UI:
         self.__board_background__ = self.background()
         self.__game__ = Game('', '')
         self.__game__.prepare_board()
-        self.__hitmap__ = HitMap(72, 184, 72, 21)
+        self.__hitmap__ = HitMap(72, 229, 72, 21)
         self.__controller__ = Controller(self.__game__)
         self.__hitmap__.build()
-        pygame.image.load("assets/images/checker_dark.png").convert()
     def run(self):
         """Inicia la interfaz grafica."""
         pygame.display.set_caption('| Backgammon -+- Gerónimo Giordano |')
@@ -53,39 +52,37 @@ class UI:
             pygame.draw.polygon(bg, (157, 94, 55),
                                 ((545+ancho*2*i, 730),
                                  (619+ancho*2*i,730),
-                                 (580.5+ancho*2*i, 545)))
+                                 (580.5+ancho*2*i, 500)))
             pygame.draw.polygon(bg, (15, 9, 2),
                                 ((617+ancho*2*i, 730),
                                  (691+ancho*2*i,730),
-                                 (652.5+ancho*2*i, 545)))
+                                 (652.5+ancho*2*i, 500)))
         #cuadrante2
             pygame.draw.polygon(bg, (157, 94, 55),
                                 ((21+ancho*2*i, 730),
                                  (98+ancho*2*i,730),
-                                 (58+ancho*2*i, 545)))
+                                 (58+ancho*2*i, 500)))
             pygame.draw.polygon(bg, (15, 9, 2),
                                 ((93+ancho*2*i, 730),
                                  (170+ancho*i*2,730),
-                                 (130+ancho*i*2, 545)))
+                                 (130+ancho*i*2, 500)))
         #cuadrante3
             pygame.draw.polygon(bg, (157, 94, 55),
                                 ((21+ancho*2*i, 20),
                                  (98+ancho*2*i,20),
-                                 (58+ancho*2*i, 205)))
+                                 (58+ancho*2*i, 250)))
             pygame.draw.polygon(bg, (15, 9, 2),
                                 ((93+ancho*2*i, 20),
                                  (170+ancho*i*2,20),
-                                 (130+ancho*i*2, 205)))
+                                 (130+ancho*i*2, 250)))
         #cuadrante4
             pygame.draw.polygon(bg, (157, 94, 55),
                                 ((545+ancho*2*i, 20),
                                  (619+ancho*2*i,20),
-                                 (580.5+ancho*2*i, 205)))
+                                 (580.5+ancho*2*i, 250)))
             pygame.draw.polygon(bg, (15, 9, 2),
                                 ((617+ancho*2*i, 20),
                                  (691+ancho*2*i,20),
-                                 (652.5+ancho*2*i, 205)))
+                                 (652.5+ancho*2*i, 250)))
 
         return bg
-ui = UI()
-ui.run()

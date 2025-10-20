@@ -2,6 +2,7 @@
 import cmd
 from core.game import Game
 from core.player import Player
+from core.board import Board
 from core.redis_store import RedisStore
 from core.exceptions import InputError
 class CLI(cmd.Cmd):
@@ -17,20 +18,11 @@ class CLI(cmd.Cmd):
         self.__redis_store__ = RedisStore()
         self.__game__ = Game('','')
         if testing:
-            self.__contador__ = 0
             self.__game__ = Game('','', testing=True)
-
-        else:
-            try:
-                self.__contador__ = int(self.__redis_store__.get_value('contador'))
-            except (TypeError, ValueError):
-                self.__contador__ = 0
-
-
 
     def do_start(self, _line):
         """Comienza el juego."""
-        if self.__contador__ != 0:
+        if self.__game__.get_actual_player_turn() != 0:
             while True:
                 i = input("Ya hay un juego en progreso. " \
                 "Estas seguro que quieres sobreescribirlo? (y/n)")
@@ -44,16 +36,15 @@ class CLI(cmd.Cmd):
         self.__game__ = Game(nombrej1, nombrej2, testing=True)
         if self.is_testing:
             self.__game__ = Game(nombrej1, nombrej2, testing=True)
-
+        self.__game__.set_actual_player_turn(1)
         self.__game__.prepare_board()
-        self.__contador__ = 1
         print("El juego fue iniciado con exito!")
 
     def do_play(self, _line):
         """Continua con el juego"""
         g: Game = self.__game__
         winner = None
-        c = self.__contador__
+        c = self.__game__.get_actual_player_turn()
         if c == 0:
             print("Primero debes usar el comando 'start' para iniciar un nuevo juego!")
             return
@@ -69,7 +60,6 @@ class CLI(cmd.Cmd):
                 g.turn(g.__player_1__)
             except InputError as e:
                 print(e)
-            self.__contador__ = 2
             self.save_game()
             return
         if c == 2:
@@ -77,14 +67,12 @@ class CLI(cmd.Cmd):
                 g.turn(g.__player_2__)
             except InputError as e:
                 print(e)
-            self.__contador__ = 1
             self.save_game()
             return
     def winner_message(self, winner: Player):
         """Finaliza el juego si algun jugador gano."""
         print(f"Felicitaciones {winner.get_name()}!!!\nGanaste el juego =)\nEspero que lo hayas " \
               "disfrutado, gracias por jugar!")
-        self.__contador__ = 0
 
     def do_salir(self, _line):
         """Cierra el programa."""
@@ -158,7 +146,7 @@ class CLI(cmd.Cmd):
     def save_game(self):
         """Guarda el juego en la base de datos de redis."""
         self.__redis_store__.save_list_to_json('columnas', self.__game__.get_board().get_columnas())
-        self.__redis_store__.set_value('contador', self.__contador__)
+        self.__redis_store__.set_value('actual_player_turn', self.__game__.get_actual_player_turn())
         self.__redis_store__.set_value('name1', self.__game__.get_player_1().get_name())
         self.__redis_store__.set_value('name2', self.__game__.get_player_2().get_name())
         print("----- Juego guardado -----")
@@ -170,7 +158,12 @@ class CLI(cmd.Cmd):
         self.__game__ = new_game
     def get_contador(self):
         """Devuelve el atributo contador (int)"""
-        return self.__contador__
-    def set_contador(self, new_contador:int):
-        """Define el atributo contador"""
-        self.__contador__ = new_contador
+        return self.__game__.get_actual_player_turn()
+#cli = CLI()
+#cli.get_game().set_actual_player_turn(1)
+#ng = Game('a', 'b', testing=True)
+#b = Board(testing=True)
+#b.put_checker(1, 'o')
+#cli.set_game(ng)
+#cli.get_game().set_board(b)
+#cli.do_play('')

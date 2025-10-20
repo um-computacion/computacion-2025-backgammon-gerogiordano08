@@ -27,6 +27,8 @@ class Board:
                 self.__columnas__ = self.__redis_store__.load_list('columnas')
             except(TypeError, ValueError):
                 self.__columnas__ = cols
+        if self.__columnas__ == []:
+            self.__columnas__ = cols
 
 
     def show_board(self):

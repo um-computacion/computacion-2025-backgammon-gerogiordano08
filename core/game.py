@@ -3,6 +3,7 @@ from core.player import Player
 from core.checker import Checker
 from core.dice import Dice
 from core.board import Board
+from core.redis_store import RedisStore
 from core.exceptions import InputError
 
 class Game:
@@ -16,6 +17,11 @@ class Game:
         self.__checker_2__ = Checker(2)
         self.__player_1__ = Player(p1_name, 1)
         self.__player_2__ = Player(p2_name, 2)
+        self.__redis_store__ = RedisStore()
+        try:
+            self.__actual_turn_player__ = int(self.__redis_store__.get_value('actual_player_turn'))
+        except (TypeError, ValueError):
+            self.__actual_turn_player__ = 0
         if testing:
             self.__board__ = Board(testing=True)
             self.__dice__ = Dice()
@@ -23,9 +29,11 @@ class Game:
             self.__checker_2__ = Checker(2)
             self.__player_1__ = Player(p1_name, 1, testing=True)
             self.__player_2__ = Player(p2_name, 2, testing=True)
+            self.__actual_turn_player__ = 0
     def prepare_board(self) -> None:
         """ Este método deja el tablero listo para el juego,
-                dejando las 30 fichas en sus lugares correspondientes. No recibe atributos ni devuelve nada."""
+        dejando las 30 fichas en sus lugares correspondientes.
+        No recibe atributos ni devuelve nada."""
         self.__board__.clear_board()
         put = self.__board__.put_checker
         c1 = self.__checker_1__.get_symbol()
@@ -75,6 +83,7 @@ player.get_checker_type() == self.__checker_1__.get_c_type() else self.__checker
 
             successful_move = False
             if self.win_condition(self.__player_1__) or self.win_condition(self.__player_2__):
+                self.__actual_turn_player__ = 0
                 break
             while not successful_move:
                 try:
@@ -95,7 +104,7 @@ player.get_checker_type() == self.__checker_1__.get_c_type() else self.__checker
                     print(message)
             if used_die is not None:
                 dice.pop(dice.index(used_die))
-
+        self.__actual_turn_player__ = 1 if self.__actual_turn_player__ == 2 else 2
         self.__board__.show_board()
     def turn_fichas_barra(self, player: Player, dice, turn_player_checker) -> tuple:
         """Este método maneja la logica de un turno en el que el jugador tiene fichas en su barra.
@@ -313,18 +322,24 @@ player.get_checker_type() == self.__checker_1__.get_c_type() else self.__checker
         return True
 
     # Getters/Setters
-    def get_board(self):
+    def get_board(self) -> Board:
         """Devuelve el atributo board (objeto Board)."""
         return self.__board__
-    def set_board(self, nueva_board):
+    def set_board(self, nueva_board) -> None:
         """Define el atributo board (objeto Board)"""
         self.__board__ = nueva_board
-    def get_dice(self):
+    def get_dice(self) -> Dice:
         """Devuelve el atributo dice (objeto Dice)."""
         return self.__dice__
-    def get_player_1(self):
+    def get_player_1(self) -> Player:
         """Devuelve el atributo player_1 (objeto Player)."""
         return self.__player_1__
-    def get_player_2(self):
+    def get_player_2(self) -> Player:
         """Devuelve el atributo player_2 (objeto Player)."""
         return self.__player_2__
+    def get_actual_player_turn(self) -> int:
+        """Devuelve el atributo actual_player_turn (int)"""
+        return self.__actual_turn_player__
+    def set_actual_player_turn(self, new_contador) -> None:
+        """Define el atributo actual_player_turn (int)"""
+        self.__actual_turn_player__ = new_contador
