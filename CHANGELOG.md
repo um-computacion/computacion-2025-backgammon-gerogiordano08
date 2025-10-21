@@ -2,7 +2,14 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog.
 
-## [20/10/2025]
+## [20/10/2025] commit 2
+
+### Agregado
+- Clase Controller
+    - Creada la logica que muestra los dados y el nombre del jugador cuyo turno se esta jugando.
+    - Creado el metodo que muestra el mensaje de victoria.
+    
+## [20/10/2025] commit 1
 
 ### Alterado
 - El contador que marca de quien es el turno ahora es manejado por Game y no por CLI, para poder conectar de manera mas limpia el controlador de graficos con la logica del juego.

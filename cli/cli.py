@@ -44,7 +44,7 @@ class CLI(cmd.Cmd):
         """Continua con el juego"""
         g: Game = self.__game__
         winner = None
-        c = self.__game__.get_actual_player_turn()
+        c = g.get_actual_player_turn()
         if c == 0:
             print("Primero debes usar el comando 'start' para iniciar un nuevo juego!")
             return
@@ -60,14 +60,14 @@ class CLI(cmd.Cmd):
                 g.turn(g.__player_1__)
             except InputError as e:
                 print(e)
-            self.save_game()
+            self.__redis_store__.save_game(self.__game__)
             return
         if c == 2:
             try:
                 g.turn(g.__player_2__)
             except InputError as e:
                 print(e)
-            self.save_game()
+            self.__redis_store__.save_game(self.__game__)
             return
     def winner_message(self, winner: Player):
         """Finaliza el juego si algun jugador gano."""
@@ -143,12 +143,7 @@ class CLI(cmd.Cmd):
         if line not in reglas:
             line = ""
         print(f"\n{reglas[line]}")
-    def save_game(self):
-        """Guarda el juego en la base de datos de redis."""
-        self.__redis_store__.save_list_to_json('columnas', self.__game__.get_board().get_columnas())
-        self.__redis_store__.set_value('actual_player_turn', self.__game__.get_actual_player_turn())
-        self.__redis_store__.set_value('name1', self.__game__.get_player_1().get_name())
-        self.__redis_store__.set_value('name2', self.__game__.get_player_2().get_name())
+
         print("----- Juego guardado -----")
     def get_game(self):
         """Devuelve el atributo game (objeto Game)"""

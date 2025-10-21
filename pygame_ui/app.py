@@ -33,6 +33,7 @@ class UI:
             self.__screen__.blit(self.__board_background__, (0, 0))
             self.__controller__.draw(self.__screen__)
             pygame.display.flip()
+            #self.__controller__.game_turn(self.__screen__)
         pygame.quit()
     def background(self):
         """Configura la parte estatica de la pantalla,
