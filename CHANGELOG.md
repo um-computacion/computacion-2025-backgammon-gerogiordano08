@@ -2,13 +2,18 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog.
 
+## [20/10/2025] commit 3
+
+### Agregado
+- Clase Controller
+    - Creado metodo que enseña una flecha en un triangulo dado, con una orientacion dada.
 ## [20/10/2025] commit 2
 
 ### Agregado
 - Clase Controller
     - Creada la logica que muestra los dados y el nombre del jugador cuyo turno se esta jugando.
     - Creado el metodo que muestra el mensaje de victoria.
-    
+
 ## [20/10/2025] commit 1
 
 ### Alterado

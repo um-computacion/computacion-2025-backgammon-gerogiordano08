@@ -6,7 +6,7 @@ class Controller:
     def __init__(self, game:Game) -> None:
         self.__game__ = game
         self.__redis_store__ = RedisStore()
-        self.__dark_checker__, self.__light_checker__, self.dice_pngs = self.load_pngs()
+        self.__checkers_pngs__, self.dice_pngs, self.__arrows_pngs__ = self.load_pngs()
         self.__font__ = pygame.font.Font(None, 40)
         self.__font_smaller__ = pygame.font.Font(None, 30)
     def get_checker_position(self, index:int, stack_position:int):
@@ -34,12 +34,12 @@ class Controller:
                 start_point = self.get_checker_position(i, a)
                 if a < 4:
                     if x['checker'] == 'x':
-                        if type(self.__dark_checker__) == pygame.Surface:
-                            surface.blit(self.__dark_checker__, start_point)
+                        if type(self.__checkers_pngs__[0]) == pygame.Surface:
+                            surface.blit(self.__checkers_pngs__[0], start_point)
 
                     if x['checker'] == 'o':
-                        if type(self.__light_checker__) == pygame.Surface:
-                            surface.blit(self.__light_checker__, start_point)
+                        if type(self.__checkers_pngs__[1]) == pygame.Surface:
+                            surface.blit(self.__checkers_pngs__[1], start_point)
                 else:
                     text_quantity = self.__font__.render(str(x['quantity']), True, (0, 0, 0))
                     text_quantity_point = (start_point[0] + 22, start_point[1] + 80) if i < 12 else (start_point[0] + 22, start_point[1] - 40)
@@ -68,6 +68,7 @@ class Controller:
     def load_pngs(self):
         """Carga los pngs de las fichas."""
         checker_size = (60, 60)
+        arrow_size = (30, 30)
         dark_checker, light_checker = None, None
         try:
             dark = pygame.image.load("assets/images/checker_dark1.png").convert_alpha()
@@ -86,10 +87,14 @@ class Controller:
             dice_4 = pygame.transform.scale(dice_4a, checker_size)
             dice_5 = pygame.transform.scale(dice_5a, checker_size)
             dice_6 = pygame.transform.scale(dice_6a, checker_size)
+            from_arrow_a = pygame.image.load('assets/images/from_arrow.png').convert_alpha()
+            to_arrow_a = pygame.image.load('assets/images/to_arrow.png').convert_alpha()
+            from_arrow = pygame.transform.scale(from_arrow_a, arrow_size)
+            to_arrow = pygame.transform.scale(to_arrow_a, arrow_size)
 
         except pygame.error as e:
-            print(f"Error al cargal las imagenes de las fichas{e}")
-        return dark_checker, light_checker, [dice_1, dice_2, dice_3, dice_4, dice_5, dice_6]
+            print(f"Error al cargal las imagenes {e}")
+        return [dark_checker, light_checker], [dice_1, dice_2, dice_3, dice_4, dice_5, dice_6], [from_arrow, to_arrow]
     def game_turn(self, surface:pygame.Surface):
         g:Game = self.__game__
         winner = None
@@ -119,3 +124,19 @@ class Controller:
         rect_surface.blit(winner_message2, (10, 35))
         rect_pos = rect_surface.get_rect(center=(500, 375))
         surface.blit(rect_surface, rect_pos)
+    def draw_arrow(self, surface:pygame.Surface, triangle:int, fro:bool):
+        initial_pos = self.get_checker_position(triangle - 1, 4)
+        if triangle > 12:
+            dest_point = (initial_pos[0] + 10, initial_pos[1] + 10)
+            if fro is True:
+                surface.blit(self.__arrows_pngs__[1], dest_point)
+            else:
+                surface.blit(self.__arrows_pngs__[0], dest_point)
+        else:
+            dest_point = (initial_pos[0] + 15, initial_pos[1])
+            if fro is True:
+                surface.blit(self.__arrows_pngs__[0], dest_point)
+            else:
+                surface.blit(self.__arrows_pngs__[1], dest_point)
+
+

@@ -19,7 +19,11 @@ class UI:
         self.__hitmap__.build()
     def run(self):
         """Inicia la interfaz grafica."""
+        g:Game = self.__game__
         pygame.display.set_caption('| Backgammon -+- Gerónimo Giordano |')
+        cols = g.get_board().get_columnas()
+        turn_player = g.get_player_1() if g.get_actual_player_turn() == 1 else g.get_player_2()
+        turn_player_checker = 'x' if turn_player.get_checker_type() == 1 else 'o'
         run = True
         while run:
             dt = self.__clock__.tick(60) / 1000.0
@@ -29,9 +33,14 @@ class UI:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 click_pos = event.pos
                 clicked_info = self.__hitmap__.hit_test(click_pos)
-                print(f"CLIC en {click_pos} -> Resultado: {clicked_info}")
+                #if type(clicked_info['index']) is int:
+                    #if (cols[clicked_info['index'] -1]['checker'] == turn_player_checker
+                        #and cols[clicked_info['index'] -1]['quantity']):
+                        #selected_triangle = clicked_info['index']
+                        #self.__controller__.draw_arrow(self.__screen__, selected_triangle)
             self.__screen__.blit(self.__board_background__, (0, 0))
             self.__controller__.draw(self.__screen__)
+            self.__controller__.draw_arrow(self.__screen__, 12, False)
             pygame.display.flip()
             #self.__controller__.game_turn(self.__screen__)
         pygame.quit()
