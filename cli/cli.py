@@ -2,6 +2,7 @@
 import cmd
 from core.game import Game
 from core.player import Player
+from pygame_ui.app import UI
 from core.board import Board
 from core.redis_store import RedisStore
 from core.exceptions import InputError
@@ -19,6 +20,7 @@ class CLI(cmd.Cmd):
         self.__game__ = Game('','')
         if testing:
             self.__game__ = Game('','', testing=True)
+        self.__ui__ = UI(self.__game__)
 
     def do_start(self, _line):
         """Comienza el juego."""
@@ -31,8 +33,16 @@ class CLI(cmd.Cmd):
                 if i.lower() == 'y':
                     break
         self.__redis_store__.delete_db()
-        nombrej1 = str(input("Ingresa el nombre del jugador 1:\n"))
-        nombrej2 = str(input("Ingresa el nombre del jugador 2:\n"))
+        name_1_valid = False
+        name_2_valid = False
+        while name_1_valid is False:
+            nombrej1 = str(input("Ingresa el nombre del jugador 1 (máximo 15 carácteres):\n"))
+            if len(nombrej1) < 16:
+                name_1_valid = True
+        while name_2_valid is False:
+            nombrej2 = str(input("Ingresa el nombre del jugador 2 (máximo 15 carácteres):\n"))
+            if len(nombrej2) < 16:
+                name_2_valid = True
         self.__game__ = Game(nombrej1, nombrej2, testing=True)
         if self.is_testing:
             self.__game__ = Game(nombrej1, nombrej2, testing=True)
@@ -145,6 +155,11 @@ class CLI(cmd.Cmd):
         print(f"\n{reglas[line]}")
 
         print("----- Juego guardado -----")
+    def do_interfaz(self, _line):
+        """Abre la interfaz grafica."""
+        self.__game__.get_board().show_board()
+        self.__ui__ = UI(self.__game__)
+        self.__ui__.run()
     def get_game(self):
         """Devuelve el atributo game (objeto Game)"""
         return self.__game__

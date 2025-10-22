@@ -27,7 +27,7 @@ class Controller:
             y = 20 + stack_position * 60
 
         return x, y
-    def draw(self, surface:pygame.Surface):
+    def draw(self, surface:pygame.Surface, fro:int|None, destinos:list):
         """Dibuja las fichas, los dados y el nombre del jugador."""
         for i, x in enumerate(self.__game__.get_board().get_columnas()):
             for a in range(x['quantity']):
@@ -65,6 +65,10 @@ class Controller:
         dice_b_point = (670, 300)
         surface.blit(dice_dict[dice_a], dice_a_point)
         surface.blit(dice_dict[dice_b], dice_b_point)
+        if fro is not None:
+            self.draw_arrow(surface, fro, True)
+        for dest in destinos:
+            self.draw_arrow(surface, dest, False)
     def load_pngs(self):
         """Carga los pngs de las fichas."""
         checker_size = (60, 60)
@@ -138,5 +142,10 @@ class Controller:
                 surface.blit(self.__arrows_pngs__[0], dest_point)
             else:
                 surface.blit(self.__arrows_pngs__[1], dest_point)
-
-
+    def change_turn(self):
+        if self.__game__.get_actual_player_turn() == 1:
+            return 2
+        else:
+            return 1
+    def set_game(self, new_game):
+        self.__game__ = new_game

@@ -2,6 +2,17 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog.
 
+## [21/10/2025]
+
+### Agregado
+- Clase CLI
+    - metodo do_interfaz(), que inicia la interfaz grafica
+- Clase Game
+    - Metodo no_available_moves(), que verifica si no hay movimientos disponibles.
+- Clase UI
+    - Se avanzo con la logica de turno para la interfaz grafica.
+- Clase Controller
+    - Metodo change_turn() que cambia el contador de turno.
 ## [20/10/2025] commit 3
 
 ### Agregado

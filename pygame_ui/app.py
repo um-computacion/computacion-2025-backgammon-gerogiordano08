@@ -5,15 +5,14 @@ from core.game import Game
 import pygame
 class UI:
     """La clase UI se encarga de manejar la interfaz grafica con pygame."""
-    def __init__(self) -> None:
+    def __init__(self, game:Game) -> None:
         pygame.init()
         self.__width__ = 1000
         self.__height__ = 750
         self.__screen__ = pygame.display.set_mode((self.__width__, self.__height__))
         self.__clock__ = pygame.time.Clock()
         self.__board_background__ = self.background()
-        self.__game__ = Game('', '')
-        self.__game__.prepare_board()
+        self.__game__ = game
         self.__hitmap__ = HitMap(72, 229, 72, 21)
         self.__controller__ = Controller(self.__game__)
         self.__hitmap__.build()
@@ -25,24 +24,57 @@ class UI:
         turn_player = g.get_player_1() if g.get_actual_player_turn() == 1 else g.get_player_2()
         turn_player_checker = 'x' if turn_player.get_checker_type() == 1 else 'o'
         run = True
+        fro: int|None = None
+        to: int|None = None
+        destinos:list = []
+        self.__game__.roll_dice()
         while run:
+            self.__controller__.set_game(self.__game__)
             dt = self.__clock__.tick(60) / 1000.0
+            if self.__game__.no_available_moves(self.__game__.get_dice().get_dice_results(),
+                                                turn_player):
+                self.__controller__.change_turn()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 click_pos = event.pos
                 clicked_info = self.__hitmap__.hit_test(click_pos)
-                #if type(clicked_info['index']) is int:
-                    #if (cols[clicked_info['index'] -1]['checker'] == turn_player_checker
-                        #and cols[clicked_info['index'] -1]['quantity']):
-                        #selected_triangle = clicked_info['index']
-                        #self.__controller__.draw_arrow(self.__screen__, selected_triangle)
+                if type(clicked_info['index']) is int and fro is not None:
+                    if (clicked_info['index'] not in destinos):
+                        fro = None
+                        to = None
+                        destinos = []
+                if clicked_info['index'] is None:
+                        fro = None
+                        to = None
+                        destinos = []
+                if type(clicked_info['index']) is int:
+                    if (cols[clicked_info['index'] -1]['checker'] == turn_player_checker
+                        and cols[clicked_info['index'] -1]['quantity']):
+                        selected_triangle = clicked_info['index']
+                        fro = selected_triangle
+                        for di in self.__game__.get_dice().get_dice_results():
+                            if self.__game__.available_move(fro -1, fro + di - 1):
+                                destinos.append(selected_triangle+di)
+
+                if type(clicked_info['index']) is int:
+                    if (fro is not None
+                        and cols[clicked_info['index'] -1]['checker'] == turn_player_checker
+                        and cols[clicked_info['index'] -1]['quantity']
+                        and clicked_info['index'] in destinos):
+                        selected_triangle = clicked_info['index']
+                        to = selected_triangle
+                if type(clicked_info['index']) is int:
+                    if (fro and to
+                        and cols[clicked_info['index'] -1]['checker'] == turn_player_checker
+                        and cols[clicked_info['index'] -1]['quantity']
+                        and clicked_info['index'] == to):
+                        selected_triangle = clicked_info['index']
+
             self.__screen__.blit(self.__board_background__, (0, 0))
-            self.__controller__.draw(self.__screen__)
-            self.__controller__.draw_arrow(self.__screen__, 12, False)
+            self.__controller__.draw(self.__screen__, fro, destinos)
             pygame.display.flip()
-            #self.__controller__.game_turn(self.__screen__)
         pygame.quit()
     def background(self):
         """Configura la parte estatica de la pantalla,

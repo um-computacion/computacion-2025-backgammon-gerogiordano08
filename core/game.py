@@ -77,11 +77,15 @@ player.get_checker_type() == self.__checker_1__.get_c_type() else self.__checker
         else:
             print(f"Dado 1: {dice[0]}. \nDado 2: {dice[1]}. \n Tienes dobles!" )
         # Comienza loop que maneja cada movimiento disponible
+
         for _ in range(len(dice)):
             has_checkers_in_bar = bool(
             self.__board__.get_columnas()[player.get_bar_index()]['quantity'] > 0)
 
             successful_move = False
+            if self.no_available_moves(dice, player):
+                successful_move = True
+                print('No tienes ningun movimiento disponible, se saltea el turno.')
             if self.win_condition(self.__player_1__) or self.win_condition(self.__player_2__):
                 self.__actual_turn_player__ = 0
                 break
@@ -320,7 +324,17 @@ player.get_checker_type() == self.__checker_1__.get_c_type() else self.__checker
                 if self.__board__.get_columnas()[x]['quantity'] > 0:
                     return False
         return True
-
+    def no_available_moves(self, dice, player:Player):
+        for i, _ in enumerate(self.__board__.get_columnas()):
+            if player.get_checker_type() == 1:
+                for die in dice:
+                    if self.available_move(i, i+die):
+                        return False
+            else:
+                for die in dice:
+                    if self.available_move(i, i-die):
+                        return False
+        return True
     # Getters/Setters
     def get_board(self) -> Board:
         """Devuelve el atributo board (objeto Board)."""
