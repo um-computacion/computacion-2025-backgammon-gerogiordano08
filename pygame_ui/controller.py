@@ -2,13 +2,16 @@ import pygame
 from core.game import Game
 from core.player import Player
 from core.redis_store import RedisStore
+from pygame_ui.hitmap import HitMap
 class Controller:
     def __init__(self, game:Game) -> None:
         self.__game__ = game
         self.__redis_store__ = RedisStore()
-        self.__checkers_pngs__, self.dice_pngs, self.__arrows_pngs__ = self.load_pngs()
+        #pngs de checkers, dados y flechas, en ese orden
+        self.__assets__= self.load_pngs()
         self.__font__ = pygame.font.Font(None, 40)
         self.__font_smaller__ = pygame.font.Font(None, 30)
+        self.__fro_to_destinos_dicec__ = [None, None, [], 0]
     def get_checker_position(self, index:int, stack_position:int):
         """Traduce la posicion de una ficha, desde el atributo
         columnas de Board, a una posicion de pixeles en el tablero."""
@@ -34,12 +37,12 @@ class Controller:
                 start_point = self.get_checker_position(i, a)
                 if a < 4:
                     if x['checker'] == 'x':
-                        if type(self.__checkers_pngs__[0]) == pygame.Surface:
-                            surface.blit(self.__checkers_pngs__[0], start_point)
+                        if type(self.__assets__[0]) == pygame.Surface:
+                            surface.blit(self.__assets__[0], start_point)
 
                     if x['checker'] == 'o':
-                        if type(self.__checkers_pngs__[1]) == pygame.Surface:
-                            surface.blit(self.__checkers_pngs__[1], start_point)
+                        if type(self.__assets__[1]) == pygame.Surface:
+                            surface.blit(self.__assets__[1], start_point)
                 else:
                     text_quantity = self.__font__.render(str(x['quantity']), True, (0, 0, 0))
                     text_quantity_point = (start_point[0] + 22, start_point[1] + 80) if i < 12 else (start_point[0] + 22, start_point[1] - 40)
@@ -54,12 +57,12 @@ class Controller:
         text_turn = self.__font__.render(f'Turno de {player_name}', True, (0, 0, 0))
         surface.blit(text_turn, text_turn_point)
         dice_dict = {0:self.__font__.render('Dado', True, (0, 0, 0)),
-                    1:self.dice_pngs[0],
-                    2:self.dice_pngs[1],
-                    3:self.dice_pngs[2],
-                    4:self.dice_pngs[3],
-                    5:self.dice_pngs[4],
-                    6:self.dice_pngs[5]}
+                    1:self.__assets__[2],
+                    2:self.__assets__[3],
+                    3:self.__assets__[4],
+                    4:self.__assets__[5],
+                    5:self.__assets__[6],
+                    6:self.__assets__[7]}
         dice_a, dice_b = self.__game__.get_dice().get_dice_results()[0], self.__game__.get_dice().get_dice_results()[1]
         dice_a_point = (600, 300)
         dice_b_point = (670, 300)
@@ -98,27 +101,8 @@ class Controller:
 
         except pygame.error as e:
             print(f"Error al cargal las imagenes {e}")
-        return [dark_checker, light_checker], [dice_1, dice_2, dice_3, dice_4, dice_5, dice_6], [from_arrow, to_arrow]
-    def game_turn(self, surface:pygame.Surface):
-        g:Game = self.__game__
-        winner = None
-        c = g.get_actual_player_turn()
-        if g.win_condition(g.__player_1__):
-            winner = g.__player_1__
-        if g.win_condition(g.__player_2__):
-            winner = g.__player_2__
-        if winner is not None:
-            self.draw_winner_message(winner, surface)
-            self.__game__.set_actual_player_turn(0)
-            return
-        if c == 1:
-            g.turn(g.__player_1__)
-            self.__redis_store__.save_game(self.__game__)
-            return
-        if c == 2:
-            g.turn(g.__player_2__)
-            self.__redis_store__.save_game(self.__game__)
-            return
+        return dark_checker, light_checker, dice_1, dice_2, dice_3, dice_4, dice_5, dice_6, from_arrow, to_arrow
+
     def draw_winner_message(self, winner:Player, surface:pygame.Surface):
         rect_surface = pygame.Surface((600, 60), pygame.SRCALPHA)
         pygame.draw.rect(rect_surface, (210, 230, 185), rect_surface.get_rect(), border_radius=10)
@@ -129,23 +113,59 @@ class Controller:
         rect_pos = rect_surface.get_rect(center=(500, 375))
         surface.blit(rect_surface, rect_pos)
     def draw_arrow(self, surface:pygame.Surface, triangle:int, fro:bool):
-        initial_pos = self.get_checker_position(triangle - 1, 4)
+        initial_pos = self.get_checker_position(triangle, 4)
         if triangle > 12:
             dest_point = (initial_pos[0] + 10, initial_pos[1] + 10)
             if fro is True:
-                surface.blit(self.__arrows_pngs__[1], dest_point)
+                surface.blit(self.__assets__[9], dest_point)
             else:
-                surface.blit(self.__arrows_pngs__[0], dest_point)
+                surface.blit(self.__assets__[8], dest_point)
         else:
             dest_point = (initial_pos[0] + 15, initial_pos[1])
             if fro is True:
-                surface.blit(self.__arrows_pngs__[0], dest_point)
+                surface.blit(self.__assets__[8], dest_point)
             else:
-                surface.blit(self.__arrows_pngs__[1], dest_point)
+                surface.blit(self.__assets__[9], dest_point)
     def change_turn(self):
         if self.__game__.get_actual_player_turn() == 1:
             return 2
         else:
             return 1
+    def handle_click(self,click_pos, hitmap:HitMap):
+        g:Game = self.__game__
+        clicked_info = hitmap.hit_test(click_pos)
+        cols = self.__game__.get_board().get_columnas()
+        turn_player = g.get_player_1() if g.get_actual_player_turn() == 1 else g.get_player_2()
+        turn_player_checker = 'x' if turn_player.get_checker_type() == 1 else 'o'
+
+        #clickea un triangulo para seleccionarlo como origen
+        if type(clicked_info['index']) is int:
+            if (cols[clicked_info['index'] -1]['checker'] == turn_player_checker
+            and cols[clicked_info['index'] -1]['quantity'] > 0):
+                selected_triangle = clicked_info['index'] - 1
+                self.__fro_to_destinos_dicec__[0] = selected_triangle
+                self.__fro_to_destinos_dicec__[2] = []
+                for di in self.__game__.get_dice().get_dice_results():
+                    if turn_player.get_checker_type() == 1:
+                        if self.__game__.available_move(selected_triangle, selected_triangle + di):
+                            self.__fro_to_destinos_dicec__[2].append(selected_triangle+di)
+                    else:
+                            if self.__game__.available_move(selected_triangle, selected_triangle - di):
+                                self.__fro_to_destinos_dicec__[2].append(selected_triangle-di)
+        #clickea un triangulo para seleccionarlo como destino
+        if type(clicked_info['index']) is int:
+            if (self.__fro_to_destinos_dicec__[0] is not None
+                and cols[clicked_info['index'] -1]['checker'] == turn_player_checker
+                and cols[clicked_info['index'] -1]['quantity']
+                and clicked_info['index'] in self.__fro_to_destinos_dicec__[2]):
+                selected_triangle = clicked_info['index']
+                self.__fro_to_destinos_dicec__[1] = selected_triangle
+                self.__game__.move_checker(self.__fro_to_destinos_dicec__[0] - 1, self.__fro_to_destinos_dicec__[1] - 1)
+                self.__fro_to_destinos_dicec__[0] = None
+                self.__fro_to_destinos_dicec__[1] = None
+                self.__fro_to_destinos_dicec__[2] = []
+                self.__fro_to_destinos_dicec__[3] += 1
     def set_game(self, new_game):
         self.__game__ = new_game
+    def get_fro_to_destinos_dicec(self):
+        return self.__fro_to_destinos_dicec__

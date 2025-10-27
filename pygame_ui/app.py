@@ -20,17 +20,20 @@ class UI:
         """Inicia la interfaz grafica."""
         g:Game = self.__game__
         pygame.display.set_caption('| Backgammon -+- Gerónimo Giordano |')
-        cols = g.get_board().get_columnas()
+        run = True
+
+        self.__game__.roll_dice()
         turn_player = g.get_player_1() if g.get_actual_player_turn() == 1 else g.get_player_2()
         turn_player_checker = 'x' if turn_player.get_checker_type() == 1 else 'o'
-        run = True
-        fro: int|None = None
-        to: int|None = None
-        destinos:list = []
-        self.__game__.roll_dice()
+
         while run:
+            if self.__controller__.get_fro_to_destinos_dicec()[3] == len(self.__game__.get_dice().get_dice_results()):
+                self.__controller__.change_turn()
+                dice_count = 0
+                self.__game__.roll_dice()
             self.__controller__.set_game(self.__game__)
             dt = self.__clock__.tick(60) / 1000.0
+            
             if self.__game__.no_available_moves(self.__game__.get_dice().get_dice_results(),
                                                 turn_player):
                 self.__controller__.change_turn()
@@ -38,42 +41,11 @@ class UI:
                 if event.type == pygame.QUIT:
                     run = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                click_pos = event.pos
-                clicked_info = self.__hitmap__.hit_test(click_pos)
-                if type(clicked_info['index']) is int and fro is not None:
-                    if (clicked_info['index'] not in destinos):
-                        fro = None
-                        to = None
-                        destinos = []
-                if clicked_info['index'] is None:
-                        fro = None
-                        to = None
-                        destinos = []
-                if type(clicked_info['index']) is int:
-                    if (cols[clicked_info['index'] -1]['checker'] == turn_player_checker
-                        and cols[clicked_info['index'] -1]['quantity']):
-                        selected_triangle = clicked_info['index']
-                        fro = selected_triangle
-                        for di in self.__game__.get_dice().get_dice_results():
-                            if self.__game__.available_move(fro -1, fro + di - 1):
-                                destinos.append(selected_triangle+di)
-
-                if type(clicked_info['index']) is int:
-                    if (fro is not None
-                        and cols[clicked_info['index'] -1]['checker'] == turn_player_checker
-                        and cols[clicked_info['index'] -1]['quantity']
-                        and clicked_info['index'] in destinos):
-                        selected_triangle = clicked_info['index']
-                        to = selected_triangle
-                if type(clicked_info['index']) is int:
-                    if (fro and to
-                        and cols[clicked_info['index'] -1]['checker'] == turn_player_checker
-                        and cols[clicked_info['index'] -1]['quantity']
-                        and clicked_info['index'] == to):
-                        selected_triangle = clicked_info['index']
+                self.__controller__.handle_click(event.pos, self.__hitmap__)
 
             self.__screen__.blit(self.__board_background__, (0, 0))
-            self.__controller__.draw(self.__screen__, fro, destinos)
+            #print(self.__controller__.get_fro_to_destinos_dicec()[2])
+            self.__controller__.draw(self.__screen__, self.__controller__.get_fro_to_destinos_dicec()[0], self.__controller__.get_fro_to_destinos_dicec()[2])
             pygame.display.flip()
         pygame.quit()
     def background(self):

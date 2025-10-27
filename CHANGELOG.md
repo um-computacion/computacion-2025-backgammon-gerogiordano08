@@ -2,6 +2,11 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog.
 
+## [26/10/2025]
+
+### Agregado
+- Clase Controller
+    - metodo handle_click() que maneja la logica al clickear un triangulo propio en tu turno. Muestra flechas en los destinos disponibles.
 ## [21/10/2025]
 
 ### Agregado
