@@ -17,7 +17,7 @@ class CLITests(unittest.TestCase):
         with self.assertRaises(SystemExit):
             self.cli.do_start('')
         mock_print.assert_any_call("Ingresa el nombre del jugador 1:\n")
-        self.cli.set_contador(1)
+        self.cli.get_game().set_actual_player_turn(1)
         with self.assertRaises(SystemExit):
             self.cli.do_start('')
         mock_print.assert_any_call("Ya hay un juego en progreso. Estas seguro que quieres sobreescribirlo? (y/n)")
@@ -28,7 +28,7 @@ class CLITests(unittest.TestCase):
         self.cli.do_start('')
         self.assertEqual(self.cli.get_game().get_player_1().get_name(), 'a')
         self.assertEqual(self.cli.get_game().get_player_2().get_name(), 'b')
-        self.assertEqual(self.cli.get_contador(), 1)
+        self.assertEqual(self.cli.get_game().get_actual_player_turn(), 1)
 
     @patch('builtins.print')
     def test_do_play_no_hay_juego(self, mock_print):
@@ -37,25 +37,25 @@ class CLITests(unittest.TestCase):
 
     @patch("builtins.print")
     def test_do_play_winner_p1(self,mock_print):
-        self.cli.set_contador(1)
         ng = Game('a', 'b', testing=True)
         b = Board(testing=True)
         b.put_checker(1, 'o')
-        ng.set_board(b)
         self.cli.set_game(ng)
+        self.cli.get_game().set_board(b)
+        self.cli.get_game().set_actual_player_turn(1)
         self.cli.do_play('')
         mock_print.assert_any_call("Felicitaciones a!!!\nGanaste el juego =)\nEspero que lo hayas disfrutado, gracias por jugar!")
     @patch("builtins.print")
     def test_do_play_winner_p2(self,mock_print):
-        self.cli.set_contador(1)
         ng = Game('a', 'b', testing=True)
         b = Board(testing=True)
-        b.put_checker(22, 'x')
-        ng.set_board(b)
+        b.put_checker(1, 'x')
         self.cli.set_game(ng)
+        self.cli.get_game().set_board(b)
+        self.cli.get_game().set_actual_player_turn(1)
         self.cli.do_play('')
         mock_print.assert_any_call("Felicitaciones b!!!\nGanaste el juego =)\nEspero que lo hayas disfrutado, gracias por jugar!")
-
+    
     @patch('builtins.input', side_effect=['a', 'b'])
     @patch("cli.cli.Game.turn")
     def test_do_play_to_turn_p1(self, mock_turn, mock_input):
@@ -67,7 +67,7 @@ class CLITests(unittest.TestCase):
     @patch("cli.cli.Game.turn")
     def test_do_play_to_turn_p2(self, mock_turn, mock_input):
         self.cli.do_start('')
-        self.cli.set_contador(2)
+        self.cli.get_game().set_actual_player_turn(2)
         self.cli.do_play('')
         mock_turn.assert_called_once()
     @patch("builtins.print")

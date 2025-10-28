@@ -17,6 +17,12 @@ class RedisStore:
         if isinstance(raw, str):
             return json.loads(raw)
         return []
+    def save_game(self, game):
+        """Guarda el juego en la base de datos de redis."""
+        self.save_list_to_json('columnas', game.get_board().get_columnas())
+        self.set_value('actual_player_turn', game.get_actual_player_turn())
+        self.set_value('name1', game.get_player_1().get_name())
+        self.set_value('name2', game.get_player_2().get_name())
     def get_value(self, key):
         """Devuelve un valor guardado en redis. """
         return str(self.__r__.get(key))

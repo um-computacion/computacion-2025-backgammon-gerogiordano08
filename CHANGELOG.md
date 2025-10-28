@@ -1,6 +1,54 @@
 # Changelog
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog.
+
+## [28/10/2025]
+- Clase Controller
+    - La logica de handle_click() ya permite que el jugador seleccione la casilla origen, la casilla destino, se complete el movimiento, se usen los dados disponibles, y cambie de turno cuando el jugador ya uso todos sus dados.
+## [26/10/2025]
+
+### Agregado
+- Clase Controller
+    - metodo handle_click() que maneja la logica al clickear un triangulo propio en tu turno. Muestra flechas en los destinos disponibles.
+## [21/10/2025]
+
+### Agregado
+- Clase CLI
+    - metodo do_interfaz(), que inicia la interfaz grafica
+- Clase Game
+    - Metodo no_available_moves(), que verifica si no hay movimientos disponibles.
+- Clase UI
+    - Se avanzo con la logica de turno para la interfaz grafica.
+- Clase Controller
+    - Metodo change_turn() que cambia el contador de turno.
+## [20/10/2025] commit 3
+
+### Agregado
+- Clase Controller
+    - Creado metodo que enseña una flecha en un triangulo dado, con una orientacion dada.
+## [20/10/2025] commit 2
+
+### Agregado
+- Clase Controller
+    - Creada la logica que muestra los dados y el nombre del jugador cuyo turno se esta jugando.
+    - Creado el metodo que muestra el mensaje de victoria.
+
+## [20/10/2025] commit 1
+
+### Alterado
+- El contador que marca de quien es el turno ahora es manejado por Game y no por CLI, para poder conectar de manera mas limpia el controlador de graficos con la logica del juego.
+
+## [18/10/2025]
+
+### Agregado
+- Clase Controller 
+    - Cuando hay mas de 4 fichas en una casilla, muestra solo cuatro junto con el numero en la cuarta casilla
+
+## [17/10/2025]
+### Agregado
+
+- Se creo la clase controller que controla la logica del juego para enviarla a la interfaz grafica.
+
 ## [14/10/2025]
 
 ### Agregado
