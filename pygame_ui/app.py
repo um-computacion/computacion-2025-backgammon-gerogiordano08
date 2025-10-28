@@ -12,7 +12,7 @@ class UI:
         self.__screen__ = pygame.display.set_mode((self.__width__, self.__height__))
         self.__clock__ = pygame.time.Clock()
         self.__board_background__ = self.background()
-        self.__game__ = game
+        self.__game__: Game = game
         self.__hitmap__ = HitMap(72, 229, 72, 21)
         self.__controller__ = Controller(self.__game__)
         self.__hitmap__.build()
@@ -27,10 +27,12 @@ class UI:
         turn_player_checker = 'x' if turn_player.get_checker_type() == 1 else 'o'
 
         while run:
-            if self.__controller__.get_fro_to_destinos_dicec()[3] == len(self.__game__.get_dice().get_dice_results()):
+            self.__game__ = self.__controller__.get_game()
+            if self.__controller__.get_fro_to_destinos_dicecount_dice()[3] == len(self.__game__.get_dice().get_dice_results()):
                 self.__controller__.change_turn()
-                dice_count = 0
+                self.__controller__.set_fro_to_destinos_dicecount_dice(3, 0)
                 self.__game__.roll_dice()
+                self.__controller__.__fro_to_destinos_dicecount_useddice__[4] = []
             self.__controller__.set_game(self.__game__)
             dt = self.__clock__.tick(60) / 1000.0
             
@@ -44,8 +46,7 @@ class UI:
                 self.__controller__.handle_click(event.pos, self.__hitmap__)
 
             self.__screen__.blit(self.__board_background__, (0, 0))
-            #print(self.__controller__.get_fro_to_destinos_dicec()[2])
-            self.__controller__.draw(self.__screen__, self.__controller__.get_fro_to_destinos_dicec()[0], self.__controller__.get_fro_to_destinos_dicec()[2])
+            self.__controller__.draw(self.__screen__, self.__controller__.get_fro_to_destinos_dicecount_dice()[0], self.__controller__.get_fro_to_destinos_dicecount_dice()[2])
             pygame.display.flip()
         pygame.quit()
     def background(self):

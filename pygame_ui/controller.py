@@ -11,7 +11,7 @@ class Controller:
         self.__assets__= self.load_pngs()
         self.__font__ = pygame.font.Font(None, 40)
         self.__font_smaller__ = pygame.font.Font(None, 30)
-        self.__fro_to_destinos_dicec__ = [None, None, [], 0]
+        self.__fro_to_destinos_dicecount_useddice__ = [None, None, [], 0, []]
     def get_checker_position(self, index:int, stack_position:int):
         """Traduce la posicion de una ficha, desde el atributo
         columnas de Board, a una posicion de pixeles en el tablero."""
@@ -128,44 +128,61 @@ class Controller:
                 surface.blit(self.__assets__[9], dest_point)
     def change_turn(self):
         if self.__game__.get_actual_player_turn() == 1:
-            return 2
+            self.__game__.set_actual_player_turn(2)
         else:
-            return 1
+            self.__game__.set_actual_player_turn(1)
+
     def handle_click(self,click_pos, hitmap:HitMap):
+        info_list = self.__fro_to_destinos_dicecount_useddice__
         g:Game = self.__game__
         clicked_info = hitmap.hit_test(click_pos)
         cols = self.__game__.get_board().get_columnas()
         turn_player = g.get_player_1() if g.get_actual_player_turn() == 1 else g.get_player_2()
         turn_player_checker = 'x' if turn_player.get_checker_type() == 1 else 'o'
-
         #clickea un triangulo para seleccionarlo como origen
         if type(clicked_info['index']) is int:
             if (cols[clicked_info['index'] -1]['checker'] == turn_player_checker
-            and cols[clicked_info['index'] -1]['quantity'] > 0):
+            and cols[clicked_info['index'] -1]['quantity'] > 0
+            and clicked_info['index'] -1 not in info_list[2]):
                 selected_triangle = clicked_info['index'] - 1
-                self.__fro_to_destinos_dicec__[0] = selected_triangle
-                self.__fro_to_destinos_dicec__[2] = []
-                for di in self.__game__.get_dice().get_dice_results():
+                info_list[0] = selected_triangle
+                info_list[2] = []
+                available_dice = []
+                if self.__game__.get_dice().get_dice_results()[0] == self.__game__.get_dice().get_dice_results()[1]:
+                    for _ in range(len(self.__game__.get_dice().get_dice_results()) - len(info_list[4])):
+                        available_dice.append(self.__game__.get_dice().get_dice_results()[0])
+                else:
+                    available_dice = [x for x in self.__game__.get_dice().get_dice_results() if x not in info_list[4]]
+                print(self.__game__.get_dice().get_dice_results(), info_list[4], available_dice)
+                for di in available_dice:
                     if turn_player.get_checker_type() == 1:
                         if self.__game__.available_move(selected_triangle, selected_triangle + di):
-                            self.__fro_to_destinos_dicec__[2].append(selected_triangle+di)
+                            info_list[2].append(selected_triangle+di)
                     else:
                             if self.__game__.available_move(selected_triangle, selected_triangle - di):
-                                self.__fro_to_destinos_dicec__[2].append(selected_triangle-di)
+                                info_list[2].append(selected_triangle-di)
         #clickea un triangulo para seleccionarlo como destino
         if type(clicked_info['index']) is int:
-            if (self.__fro_to_destinos_dicec__[0] is not None
-                and cols[clicked_info['index'] -1]['checker'] == turn_player_checker
-                and cols[clicked_info['index'] -1]['quantity']
-                and clicked_info['index'] in self.__fro_to_destinos_dicec__[2]):
-                selected_triangle = clicked_info['index']
-                self.__fro_to_destinos_dicec__[1] = selected_triangle
-                self.__game__.move_checker(self.__fro_to_destinos_dicec__[0] - 1, self.__fro_to_destinos_dicec__[1] - 1)
-                self.__fro_to_destinos_dicec__[0] = None
-                self.__fro_to_destinos_dicec__[1] = None
-                self.__fro_to_destinos_dicec__[2] = []
-                self.__fro_to_destinos_dicec__[3] += 1
+            if (info_list[0] is not None
+                and clicked_info['index'] -1 in info_list[2]):
+                selected_triangle = clicked_info['index'] - 1
+                info_list[1] = selected_triangle
+                used_die = abs(info_list[1] - info_list[0])
+                info_list[4].append(used_die)
+                self.__game__.move_checker(info_list[0], info_list[1])
+                info_list[0] = None
+                info_list[1] = None
+                info_list[2] = []
+                info_list[3] += 1
+
+
+                
     def set_game(self, new_game):
         self.__game__ = new_game
-    def get_fro_to_destinos_dicec(self):
-        return self.__fro_to_destinos_dicec__
+    def get_game(self):
+        return self.__game__
+    def get_fro_to_destinos_dicecount_dice(self):
+        return self.__fro_to_destinos_dicecount_useddice__
+    def set_fro_to_destinos_dicecount_dice(self, index:int ,new:int|list):
+        self.__fro_to_destinos_dicecount_useddice__[index] = new
+        
