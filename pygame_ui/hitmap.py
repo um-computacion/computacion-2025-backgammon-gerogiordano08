@@ -10,6 +10,7 @@ class HitMap:
         self.__height__ = height
         self.__margin__ = margin
         self.__bar_rect__ = None
+        self.__finish_rect__ = None
     def build(self) -> None:
         """Construye las siluetas de los triangulos y la barra para poder mapear un click."""
         #poligonos superiores (13...24)
@@ -49,6 +50,7 @@ class HitMap:
                                         self.__margin__,
                                         self.__poly_width__ + self.__margin__,
                                         750 - self.__margin__*2)
+        self.__finish_rect__ = pygame.Rect(938, 365, 30, 30)
     def hit_test(self, pos: Tuple[int, int]) -> Dict[str, str|int|None]:
         """Recibe la posicion (x, y) en la que el usuario clickeo y devuelve si
         fue en la barra o en un triangulo. Si fue en un triangulo, tambien devuelve
@@ -57,6 +59,9 @@ class HitMap:
         if self.__bar_rect__ is not None:
             if self.__bar_rect__.collidepoint(x, y):
                 return {"type": "bar", "index": None}
+        if self.__finish_rect__ is not None:
+            if self.__finish_rect__.collidepoint(x, y):
+                return {"type": "finish", "index": 50}
         for p in self.__points__:
             if p["rect"].collidepoint(x, y):
                 if self.is_point_in_triangle((x, y), p["poly"]):

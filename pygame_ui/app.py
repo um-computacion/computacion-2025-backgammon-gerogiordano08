@@ -25,7 +25,7 @@ class UI:
         self.__game__.roll_dice()
         turn_player = g.get_player_1() if g.get_actual_player_turn() == 1 else g.get_player_2()
         turn_player_checker = 'x' if turn_player.get_checker_type() == 1 else 'o'
-        self.__controller__.check_state()
+        self.__controller__.check_state(turn_player)
         while run:
             self.__game__ = self.__controller__.get_game()
             if self.__controller__.get_fro_to_destinos_dicecount_dice()[3] == len(self.__game__.get_dice().get_dice_results()):

@@ -2,10 +2,22 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog.
 
-## [31/10/2025]
+## [31/10/2025] commit 2
+
+### Agregado
+- Clase Controller
+    - Se pudo implementar la mecanica de salida de fichas
+
+- El juego es funcional por completo con su interfaz grafica.
+## [31/10/2025] commit 1
+
+### Agregado
 - Clase Controller
     - Se pudo implementar la mecanica de barra a la interfaz grafica.
+
 ## [28/10/2025]
+
+### Agregado
 - Clase Controller
     - La logica de handle_click() ya permite que el jugador seleccione la casilla origen, la casilla destino, se complete el movimiento, se usen los dados disponibles, y cambie de turno cuando el jugador ya uso todos sus dados.
 ## [26/10/2025]
