@@ -13,6 +13,8 @@ class Controller:
         self.__fonts__ = [pygame.font.Font(None, 40), pygame.font.Font(None, 30)]
         self.__fro_to_destinos_dicecount_useddice_turntype_msg__ = [None, None, [], 0, [], '', '']
         self.__msgduration_msgstart__ = [3000, 0]
+
+
     def get_checker_position(self, index:int, stack_position:int):
         """Traduce la posicion de una ficha, desde el atributo
         columnas de Board, a una posicion de pixeles en el tablero."""
@@ -103,7 +105,6 @@ class Controller:
         dice_b_point = (670, 300)
         surface.blit(dice_dict[dice_a], dice_a_point)
         surface.blit(dice_dict[dice_b], dice_b_point)
-
         if fro is not None:
             self.draw_arrow(surface, fro, True)
         for dest in destinos:
@@ -116,6 +117,10 @@ class Controller:
             if current_time - self.__msgduration_msgstart__[1] > self.__msgduration_msgstart__[0]:
                 self.__fro_to_destinos_dicecount_useddice_turntype_msg__[6] = ''
                 self.__msgduration_msgstart__[1] = 0
+        if self.__fro_to_destinos_dicecount_useddice_turntype_msg__[5] == ('win1'):
+            self.draw_winner_message(self.__game__.get_player_1(), surface)
+        if self.__fro_to_destinos_dicecount_useddice_turntype_msg__[5] == ('win2'):
+            self.draw_winner_message(self.__game__.get_player_2(), surface)
     def load_pngs(self):
         """Carga los pngs de las fichas."""
         checker_size = (60, 60)
@@ -140,12 +145,15 @@ class Controller:
             dice_6 = pygame.transform.scale(dice_6a, checker_size)
             from_arrow_a = pygame.image.load('assets/images/from_arrow.png').convert_alpha()
             to_arrow_a = pygame.image.load('assets/images/to_arrow.png').convert_alpha()
+            finish_arrow_a = pygame.image.load('assets/images/finish_arrow.png').convert_alpha()
             from_arrow = pygame.transform.scale(from_arrow_a, arrow_size)
             to_arrow = pygame.transform.scale(to_arrow_a, arrow_size)
+            finish_arrow = pygame.transform.scale(finish_arrow_a, arrow_size)
+            
 
         except pygame.error as e:
-            print(f"Error al cargal las imagenes {e}")
-        return dark_checker, light_checker, dice_1, dice_2, dice_3, dice_4, dice_5, dice_6, from_arrow, to_arrow
+            print(f"Error al cargar las imagenes {e}")
+        return dark_checker, light_checker, dice_1, dice_2, dice_3, dice_4, dice_5, dice_6, from_arrow, to_arrow, finish_arrow
 
     def draw_winner_message(self, winner:Player, surface:pygame.Surface):
         rect_surface = pygame.Surface((600, 60), pygame.SRCALPHA)
@@ -165,63 +173,80 @@ class Controller:
         surface.blit(rect_surface, rect_pos)
     def draw_arrow(self, surface:pygame.Surface, triangle:int, fro:bool):
         initial_pos = self.get_checker_position(triangle, 4)
+        asset = 8
         if triangle > 12:
             dest_point = (initial_pos[0] + 10, initial_pos[1] + 10)
             if fro is True:
-                surface.blit(self.__assets__[9], dest_point)
+                asset = 9
             else:
-                surface.blit(self.__assets__[8], dest_point)
+                asset = 8
         else:
             dest_point = (initial_pos[0] + 15, initial_pos[1])
             if fro is True:
-                surface.blit(self.__assets__[8], dest_point)
+                asset = 8
             else:
-                surface.blit(self.__assets__[9], dest_point)
+                asset = 9
         if triangle == -1:
             dest_point = ((72*6+21*2 + 13), (750 - 21 - 60 - 60*4))
-            surface.blit(self.__assets__[9], dest_point)
+            asset = 9
+
         if triangle == 24:
             dest_point = ((72*6+21*2 + 13), (21 + 60*4 + 5))
+            asset = 8
+        if triangle == 50:
+            dest_point = ((938), (365))
+            asset = 10
+        if asset == 8:
             surface.blit(self.__assets__[8], dest_point)
+        elif asset == 9:
+            surface.blit(self.__assets__[9], dest_point)
+        elif asset == 10:
+            surface.blit(self.__assets__[10], dest_point)
+
+        
     def change_turn(self):
         self.__redis_store__.save_game(self.__game__)
         if self.__game__.get_actual_player_turn() == 1:
             self.__game__.set_actual_player_turn(2)
+            turn_player = self.__game__.get_player_2()
+
         else:
             self.__game__.set_actual_player_turn(1)
+            turn_player = self.__game__.get_player_1()
         self.__fro_to_destinos_dicecount_useddice_turntype_msg__ = [None, None, [], 0, [], '', '']
         self.__game__.roll_dice()
-        self.check_state()
-    def check_state(self):
+        self.check_state(turn_player)
+    def check_state(self, turn_player:Player):
         info_list = self.__fro_to_destinos_dicecount_useddice_turntype_msg__
         info_list[5] = 'normal'
 
         if self.__game__.get_actual_player_turn() == 1 and self.__game__.get_board().get_columnas()[self.__game__.get_player_1().get_bar_index()]['quantity'] > 0:
             info_list[5] = 'bar'
             info_list[0] = self.__game__.get_player_1().get_bar_practical_index()
-            print('tipoturnoencheckstate',info_list[5])
             self.destinos_disponibles(self.__game__.get_player_1())
-            print(info_list[2], 'turno barra')
             if len(info_list[2]) == 0:
                 info_list[6] = f"No hay movimientos disponibles! Se saltea el turno({self.__game__.get_dice().get_dice_results()[0]}, {self.__game__.get_dice().get_dice_results()[1]})"
                 self.change_turn()
             return
+        
         if self.__game__.get_actual_player_turn() == 2 and self.__game__.get_board().get_columnas()[self.__game__.get_player_2().get_bar_index()]['quantity'] > 0:
             info_list[5] = 'bar'
             info_list[0] = self.__game__.get_player_2().get_bar_practical_index()
             self.destinos_disponibles(self.__game__.get_player_2())
-            print(info_list[2], 'turno barra')
             if len(info_list[2]) == 0:
                 info_list[6] = f"No hay movimientos disponibles! Se saltea el turno({self.__game__.get_dice().get_dice_results()[0]}, {self.__game__.get_dice().get_dice_results()[1]})"
                 self.change_turn()
             return
-        rango_loop = range(0, 18) if self.__game__.get_actual_player_turn() == 1 else range(6, 24)
-        is_finishing_turn = True
-        for i in rango_loop:
-           if self.__game__.get_board().get_columnas()[i]['quantity'] > 0:
-               is_finishing_turn = False
-        if is_finishing_turn:
-            self.__fro_to_destinos_dicecount_useddice_turntype_msg__[5] = 'finish'
+        
+        if self.__game__.win_condition(self.__game__.get_player_1()):
+            info_list[5] = 'win1'
+        if self.__game__.win_condition(self.__game__.get_player_2()):
+            info_list[5] = 'win2'
+
+        if self.__game__.no_available_moves(self.__game__.get_dice().get_dice_results(), turn_player):
+            self.__fro_to_destinos_dicecount_useddice_turntype_msg__[6] = "No hay movimientos disponibles! Se saltea el turno"
+            self.change_turn()
+            return
     def handle_click(self,click_pos, hitmap:HitMap):
         g:Game = self.__game__
         clicked_info = hitmap.hit_test(click_pos)
@@ -237,24 +262,21 @@ class Controller:
         else:
             self.__game__.get_board().remove_checker(turn_player.get_bar_index())
         columnas = self.__game__.get_board().get_columnas()
-        if columnas[to]['quantity'] == 0:
+        if to == 50:
+            return
+        elif columnas[to]['quantity'] == 0:
             self.__game__.get_board().put_checker(to, columnas[fro]['checker'])
         elif columnas[to]['checker'] == turn_player_checker:
             self.__game__.get_board().add_checker(to)
         elif columnas[to]['checker'] != turn_player_checker and columnas[to]['quantity'] < 2:
             self.__game__.get_board().put_checker(to, turn_player_checker)
             self.__game__.get_board().add_checker(turn_player.get_bar_opp_index())
-            print('barra opuesta',turn_player.get_bar_opp_index())
-            print('cantidad', columnas[turn_player.get_bar_opp_index()]['quantity'])
     def handle_turn_normal(self, clicked_info, turn_player:Player, turn_player_checker:str):
         cols = self.__game__.get_board().get_columnas()
         info_list = self.__fro_to_destinos_dicecount_useddice_turntype_msg__
-        if self.__game__.no_available_moves(self.__game__.get_dice().get_dice_results(), turn_player):
-            self.__fro_to_destinos_dicecount_useddice_turntype_msg__[6] = "No hay movimientos disponibles! Se saltea el turno"
-            self.change_turn()
-            return
+
         #clickea un triangulo para seleccionarlo como origen
-        if type(clicked_info['index']) is int:
+        if type(clicked_info['index']) is int and clicked_info['index'] != 50:
             if (cols[clicked_info['index'] -1]['checker'] == turn_player_checker
             and cols[clicked_info['index'] -1]['quantity'] > 0
             and clicked_info['index'] -1 not in info_list[2]):
@@ -262,8 +284,10 @@ class Controller:
                 info_list[0] = selected_triangle
                 info_list[2] = []
                 self.destinos_disponibles(turn_player)
+                self.check_state(turn_player)
+
         #clickea un triangulo para seleccionarlo como destino
-        if type(clicked_info['index']) is int:
+        if type(clicked_info['index']) is int and clicked_info['index'] != 50:
             if (info_list[0] is not None
                 and clicked_info['index'] -1 in info_list[2]):
                 selected_triangle = clicked_info['index'] - 1
@@ -275,6 +299,24 @@ class Controller:
                 info_list[1] = None
                 info_list[2] = []
                 info_list[3] += 1
+                self.check_state(turn_player)
+
+        #clickea el final de la barra para sacar una ficha
+
+        if clicked_info['index'] == 50:
+            if (info_list[0] is not None
+                and self.__game__.can_finish_checkers(turn_player)
+                and clicked_info['index'] in info_list[2]):
+                info_list[1] = 50
+                used_die = max(self.__game__.get_dice().get_dice_results())
+                info_list[4].append(used_die)
+                self.movement(info_list[0], info_list[1], turn_player, turn_player_checker)
+                info_list[0] = None
+                info_list[1] = None
+                info_list[2] = []
+                info_list[3] += 1
+                self.check_state(turn_player)
+
     def handle_turn_barra(self, clicked_info, turn_player:Player, turn_player_checker:str):
         info_list = self.__fro_to_destinos_dicecount_useddice_turntype_msg__
 
@@ -294,33 +336,28 @@ class Controller:
                 info_list[1] = None
                 info_list[2] = []
                 info_list[3] += 1
-                self.check_state()
-        #clickear para seleccionar destino
+                self.check_state(turn_player)
     def destinos_disponibles(self, turn_player:Player):
         info_list = self.__fro_to_destinos_dicecount_useddice_turntype_msg__
         available_dice = []
-        print('barindex, infolist5, infolist0', turn_player.get_bar_index(), info_list[5], info_list[0])
         fro = turn_player.get_bar_index() if info_list[5] == 'bar' else info_list[0]
         if self.__game__.get_dice().get_dice_results()[0] == self.__game__.get_dice().get_dice_results()[1]:
             for _ in range(len(self.__game__.get_dice().get_dice_results()) - len(info_list[4])):
                 available_dice.append(self.__game__.get_dice().get_dice_results()[0])
         else:
             available_dice = [x for x in self.__game__.get_dice().get_dice_results() if x not in info_list[4]]
-        print(f'dadosdisponibles:{available_dice}, tipochecker:{turn_player.get_checker_type()}', 'me esta cagando info list4', info_list[4])
         for di in available_dice:
 
             if turn_player.get_checker_type() == 1:
-                print(f'die: {di}',f'fro: {fro}','available move', self.__game__.available_move(fro, info_list[0] + di), f'type: {info_list[5]}')
                 if self.__game__.available_move(fro, info_list[0] + di):
                     info_list[2].append(info_list[0]+di)
-                    print(info_list[2])
+                if info_list[0] + di > 23 and self.__game__.can_finish_checkers(turn_player):
+                    info_list[2].append(50)
             else:
-                print(f'die: {di}',f'fro: {fro}','available move', self.__game__.available_move(fro, info_list[0] - di), f'type: {info_list[5]}')
                 if self.__game__.available_move(fro, info_list[0] - di):
                     info_list[2].append(info_list[0] - di)
-                print(info_list[2])
-    def handle_turn_finish(self):
-        pass
+                if info_list[0] - di < 0 and self.__game__.can_finish_checkers(turn_player):
+                    info_list[2].append(50)
     def set_game(self, new_game):
         self.__game__ = new_game
     def get_game(self):

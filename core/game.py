@@ -278,10 +278,14 @@ player.get_checker_type() == self.__checker_1__.get_c_type() else self.__checker
         return False, None, msg
 
     # Verificadores condicionales
-    def available_move(self, fro:int, to:int) -> bool:
+    def available_move(self, fro:int, to:int, player:Player|None =None) -> bool:
         """ Verifica que un movimiento sea válido segun las normas del juego. """
         columnas = self.__board__.get_columnas()
         if to > 23 or to < 0:
+            if player:
+                if self.can_finish_checkers(player):
+                    return True
+                return False
             return False
         if columnas[to]['quantity'] < 2:
             return True
