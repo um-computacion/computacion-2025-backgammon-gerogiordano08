@@ -87,6 +87,7 @@ class CLI(cmd.Cmd):
     def do_salir(self, _line):
         """Cierra el programa."""
         print("Gracias por jugar!")
+        self.__redis_store__.save_game(self.__game__)
         return True
     def do_ayuda(self, _line):
         """Muestra los comandos disponibles para ejecutar."""

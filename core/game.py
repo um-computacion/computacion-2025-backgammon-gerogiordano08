@@ -47,16 +47,7 @@ class Game:
         put(7, c2, 3)
         put(12, c2, 5)
         put(23, c2, 2)
-    def move_checker(self, fro, to) -> None:
-        """Recibe los argumentos fro (columna origen) y to (columna destino). Este método
-                saca una ficha de una columna fro y la suma en la columna to."""
-        self.__board__.remove_checker(fro)
-        columnas = self.__board__.get_columnas()
-        if columnas[to]['quantity'] == 0:
 
-            self.__board__.put_checker(to, columnas[fro]['checker'])
-        else:
-            self.__board__.add_checker(to)
     def roll_dice(self) -> None:
         """ Usa el método roll_dice() de la clase Dice. Simula tirar los dados y
                 deja definidos dos números aleatorios entre 1 y 6 para el objeto Dice."""

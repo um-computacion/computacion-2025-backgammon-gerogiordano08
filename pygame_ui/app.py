@@ -25,14 +25,12 @@ class UI:
         self.__game__.roll_dice()
         turn_player = g.get_player_1() if g.get_actual_player_turn() == 1 else g.get_player_2()
         turn_player_checker = 'x' if turn_player.get_checker_type() == 1 else 'o'
-
+        self.__controller__.check_state()
         while run:
             self.__game__ = self.__controller__.get_game()
             if self.__controller__.get_fro_to_destinos_dicecount_dice()[3] == len(self.__game__.get_dice().get_dice_results()):
+
                 self.__controller__.change_turn()
-                self.__controller__.set_fro_to_destinos_dicecount_dice(3, 0)
-                self.__game__.roll_dice()
-                self.__controller__.__fro_to_destinos_dicecount_useddice__[4] = []
             self.__controller__.set_game(self.__game__)
             dt = self.__clock__.tick(60) / 1000.0
             
