@@ -14,9 +14,10 @@ class CLITests(unittest.TestCase):
     @patch("builtins.input", side_effect=SystemExit)
     def test_do_start_prints(self, mock_print, mock_input):
         """Testea que la funcion muestre las indicaciones correctas en la consola"""
+        self.cli.get_game().set_actual_player_turn(0)
         with self.assertRaises(SystemExit):
             self.cli.do_start('')
-        mock_print.assert_any_call("Ingresa el nombre del jugador 1:\n")
+        mock_print.assert_any_call("Ingresa el nombre del jugador 1 (máximo 15 carácteres):\n")
         self.cli.get_game().set_actual_player_turn(1)
         with self.assertRaises(SystemExit):
             self.cli.do_start('')

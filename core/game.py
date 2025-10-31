@@ -312,7 +312,7 @@ player.get_checker_type() == self.__checker_1__.get_c_type() else self.__checker
         """ Verifica si el jugador dado como argumento ha ganado o sigue en juego. """
         if player.get_checker_type() == 1:
             c = self.__checker_1__
-        else:
+        elif player.get_checker_type() == 2:
             c = self.__checker_2__
         for x in range(0, 24):
             if self.__board__.get_columnas()[x]['checker'] == c.get_symbol():
@@ -320,15 +320,18 @@ player.get_checker_type() == self.__checker_1__.get_c_type() else self.__checker
                     return False
         return True
     def no_available_moves(self, dice, player:Player):
-        for i, _ in enumerate(self.__board__.get_columnas()):
-            if player.get_checker_type() == 1:
-                for die in dice:
-                    if self.available_move(i, i+die):
-                        return False
-            else:
-                for die in dice:
-                    if self.available_move(i, i-die):
-                        return False
+        if player.get_checker_type() == 1:
+            for i in range(0, 24):
+                if self.__board__.get_columnas()[i]['checker'] == 'x':
+                    for die in dice:
+                        if self.available_move(i, i+die):
+                            return False
+        else:
+            for i in range(23, -1, -1):
+                if self.__board__.get_columnas()[i]['checker'] == 'o':
+                    for die in dice:
+                        if self.available_move(i, i-die):
+                            return False
         return True
     # Getters/Setters
     def get_board(self) -> Board:
