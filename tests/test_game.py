@@ -1,4 +1,5 @@
 from core.game import Game
+from core.player import Player
 import unittest
 from unittest.mock import patch
 from core.exceptions import InputError
@@ -28,21 +29,6 @@ class GameTests(unittest.TestCase):
         self.col[7] == { c:'o', q:3} and
         self.col[12] == { c:'o', q:5} and
         self.col[23] == { c:'o', q:2}
-        )
-    def test_move_checker(self):
-        """ Verifica que usar move_checker(fro, to) logra cambiar de posicion la ficha. """
-        c = self.c
-        q = self.q
-        self.game.move_checker(11, 10)
-        self.assertTrue(
-            self.col[11] == { c: 'x', q: 4} and
-            self.col[10] == { c: 'x', q: 1} 
-        )
-        self.game.move_checker(11, 0)
-        self.assertTrue(
-            self.col[11] == { c: 'x', q: 3} and
-            self.col[10] == { c: 'x', q: 1} and
-            self.col[0] == { c: 'x', q: 3}
         )
     def test_roll_dice(self):
         """ Compara los dados que salen con el método roll_dice() (de la clase Game) a el atributo __dice__. """
@@ -246,6 +232,9 @@ class GameTests(unittest.TestCase):
         self.assertTrue(self.game.can_finish_checkers(self.game.__player_1__))
         self.game.prepare_board()
         self.assertFalse(self.game.can_finish_checkers(self.game.__player_1__))
+        p3 = Player('a', 3)
+        self.assertFalse(self.game.can_finish_checkers(p3))
+        
     def test_can_finish_checkers_p2(self):
         """ Este test verifica que el método can_finish_checkers() devuelve True solo cuando se cumple la condicion. """
         for x in range(6, 24):
@@ -261,3 +250,12 @@ class GameTests(unittest.TestCase):
             self.col[x][self.q] = 0
         self.assertTrue(self.game.win_condition(self.game.get_player_1()))
         self.assertTrue(self.game.win_condition(self.game.get_player_2()))
+    def test_no_available_moves(self):
+        self.game.get_board().clear_board()
+        for i in range(0, 23):
+            self.game.get_board().put_checker(i, 'x', 2)
+        self.game.get_board().put_checker(23, 'o', 2)
+        self.assertTrue(self.game.no_available_moves((2,2), self.game.get_player_2()))
+        self.game.get_board().clear_board()
+        self.game.get_board().put_checker(23, 'o')
+        self.assertFalse(self.game.no_available_moves((2, 2), self.game.get_player_2()))

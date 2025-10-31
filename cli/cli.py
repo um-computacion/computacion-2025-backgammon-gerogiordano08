@@ -10,7 +10,7 @@ class CLI(cmd.Cmd):
     """Definicion de la logica de CLI, que se encarga de darle al usuario una interfaz de 
     comandos para el desarrollo del juego. Incluye los atributos game (Game) y contador (int)."""
     intro = 'Bienvenido a Backgammon por Gerónimo Giordano. Escribe \'ayuda\' para ver los' \
-    ' comandos disponibles, \'reglas\' para ver las reglas del juego. Cuando estes listo, ingresa' \
+    ' comandos disponibles, \'reglas\' para ver las reglas del juego, \'salir\' para cerrar el juego. Cuando estes listo, ingresa' \
     ' \'start\' para iniciar el juego.'
     prompt = '(backgammon) >>> '
     def __init__(self, testing:bool = False):
@@ -95,6 +95,8 @@ class CLI(cmd.Cmd):
         print(f"reglas -> {self.do_reglas.__doc__}")
         print(f"start -> {self.do_start.__doc__}")
         print(f"play -> {self.do_play.__doc__}")
+        print(f"interfaz -> {self.do_interfaz.__doc__}")
+
     def do_reglas(self, line):
         """Muestra las reglas del juego."""
         reglas = {"tablero": "En el backgammon se enfrentan dos jugadores. Cada uno de ellos " \
@@ -154,8 +156,6 @@ class CLI(cmd.Cmd):
         if line not in reglas:
             line = ""
         print(f"\n{reglas[line]}")
-
-        print("----- Juego guardado -----")
     def do_interfaz(self, _line):
         """Abre la interfaz grafica."""
         self.__game__.get_board().show_board()
@@ -170,11 +170,3 @@ class CLI(cmd.Cmd):
     def get_contador(self):
         """Devuelve el atributo contador (int)"""
         return self.__game__.get_actual_player_turn()
-#cli = CLI()
-#cli.get_game().set_actual_player_turn(1)
-#ng = Game('a', 'b', testing=True)
-#b = Board(testing=True)
-#b.put_checker(1, 'o')
-#cli.set_game(ng)
-#cli.get_game().set_board(b)
-#cli.do_play('')

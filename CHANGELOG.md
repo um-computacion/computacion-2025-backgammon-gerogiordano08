@@ -1,7 +1,12 @@
 # Changelog
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog.
+## [31/10/2025] commit 3
 
+### Agregado
+- README.md
+    - Se completo la documentacion de readme.
+    
 ## [31/10/2025] commit 2
 
 ### Agregado
