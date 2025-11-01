@@ -2,6 +2,11 @@
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog.
 
+## [01/11/2025] commit 3
+
+### Alterado
+- CLI
+    - Fue corregido bug que crasheaba la app cuando se pedia la interfaz sin un juego creado.
 ## [01/11/2025] commit 2
 
 ### Agregado
