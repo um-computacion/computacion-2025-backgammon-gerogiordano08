@@ -158,9 +158,13 @@ class CLI(cmd.Cmd):
         print(f"\n{reglas[line]}")
     def do_interfaz(self, _line):
         """Abre la interfaz grafica."""
-        self.__game__.get_board().show_board()
-        self.__ui__ = UI(self.__game__)
-        self.__ui__.run()
+        if self.__game__.get_actual_player_turn() != 0:
+            self.__game__.get_board().show_board()
+            self.__ui__ = UI(self.__game__)
+            self.__ui__.run()
+        else:
+            print("Primero debes usar el comando 'start' para iniciar un nuevo juego!")
+            return
     def get_game(self):
         """Devuelve el atributo game (objeto Game)"""
         return self.__game__
