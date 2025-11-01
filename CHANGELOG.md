@@ -1,12 +1,17 @@
 # Changelog
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog.
+## [01/11/2025]
+
+## Agregado
+- Justificación.md
+    - Se completo la documentacion de justificación.
 ## [31/10/2025] commit 3
 
 ### Agregado
 - README.md
     - Se completo la documentacion de readme.
-    
+
 ## [31/10/2025] commit 2
 
 ### Agregado
