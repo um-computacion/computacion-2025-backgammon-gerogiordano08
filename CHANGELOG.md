@@ -1,9 +1,19 @@
 # Changelog
 
 Todos los cambios notables del proyecto van a ser documentados en este changelog.
-## [01/11/2025]
 
-## Agregado
+## [01/11/2025] commit 2
+
+### Agregado
+- README.MD
+    - Fueron agregadas instrucciones para instalar redis en Ubuntu, MacOS, Windows.
+
+- requirements.txt
+    - Fue agregado el modulo redis, que por alguna razon no estaba.
+
+## [01/11/2025] commit 1
+
+### Agregado
 - Justificación.md
     - Se completo la documentacion de justificación.
 ## [31/10/2025] commit 3
