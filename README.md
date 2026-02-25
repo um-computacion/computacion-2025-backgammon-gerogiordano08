@@ -35,5 +35,5 @@ El juego incluye guardado de progreso automatico con Redis, por lo que aunque ci
 
 ## Parte tecnica
 # Tests
-La aplicacion cuenta con un 90% de covertura. Para ver el reporte de covertura, en la terminal debes ingresar los comandos `coverage run -m unittest discover` para que corra los tests, y `coverage report` para ver el reporte de covertura
+La aplicacion cuenta con un 90% de cobertura. Para ver el reporte de cobertura, en la terminal debes ingresar los comandos `coverage run -m unittest discover` para que corra los tests, y `coverage report` para ver el reporte de cobertura
 Si estas interesado en testear algun modulo especifico (board, checker, cli, dice, game, player), puedes ingresar el comando `python3 -m unittest tests.test_modulo -v`, reemplazando la palabra modulo por alguno de los anteriormente mencionados.
