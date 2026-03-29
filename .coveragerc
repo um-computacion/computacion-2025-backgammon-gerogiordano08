@@ -1,0 +1,13 @@
+[run]
+source = core/
+omit =
+    */tests/*
+    */migrations/*
+    */__main__.py
+
+[report]
+show_missing = True
+fail_under = 80
+
+[html]
+directory = htmlcov
